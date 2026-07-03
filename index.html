@@ -1,0 +1,1703 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#243746" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Iwata OS" />
+  <title>Consulting × Iwata Mindset【Completed Edition】— Audio English Prototype v0.28</title>
+  <style>
+    :root{
+      --bg:#f7f2e8;
+      --paper:#fffaf0;
+      --ink:#22313a;
+      --muted:#6f7b82;
+      --accent:#2c5871;
+      --accent2:#5f7481;
+      --line:rgba(34,49,58,.14);
+      --shadow:0 18px 50px rgba(40,34,25,.16);
+      --radius:22px;
+      --jp:#453828;
+      --green:#697b4f;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100svh;
+      font-family: ui-serif, Georgia, 'Times New Roman', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 20% -10%, rgba(44,88,113,.14), transparent 32rem),
+        radial-gradient(circle at 110% 5%, rgba(44,88,113,.18), transparent 28rem),
+        linear-gradient(180deg,#f9f4ea 0%,#efe5d4 100%);
+    }
+    body::before{
+      content:"";
+      position:fixed; inset:0; pointer-events:none; opacity:.28; mix-blend-mode:multiply;
+      background-image:
+        linear-gradient(90deg, rgba(36,55,70,.045) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(36,55,70,.035) 1px, transparent 1px);
+      background-size:28px 28px;
+    }
+    .app{max-width:920px;margin:0 auto;padding:18px 14px 92px;}
+    .hero{
+      min-height:calc(100svh - 36px);
+      display:flex; flex-direction:column; justify-content:center; gap:18px;
+    }
+    .hero-card{
+      background:rgba(255,250,240,.86);
+      backdrop-filter: blur(10px);
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:24px 20px;
+      box-shadow:var(--shadow);
+      position:relative; overflow:hidden;
+    }
+    .hero-card::after{
+      content:""; position:absolute; right:-60px; top:-80px; width:190px; height:190px;
+      border:1px solid rgba(44,88,113,.18); border-radius:50%;
+      box-shadow: inset 0 0 0 28px rgba(44,88,113,.07);
+    }
+    h1{font-size:clamp(2rem,8vw,4.3rem); line-height:.96; margin:0 0 12px; letter-spacing:-.045em;}
+    .subtitle{font-size:clamp(1rem,4vw,1.25rem); line-height:1.75; color:var(--muted); margin:0; max-width:42rem;}
+    .toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:14px;}
+    .toc a{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      color:var(--ink); text-decoration:none;
+      background:rgba(255,255,255,.62);
+      border:1px solid var(--line); border-radius:18px;
+      padding:11px 12px;
+      min-height:54px;
+      box-shadow:0 8px 20px rgba(40,34,25,.07);
+    }
+    .toc a.outline{opacity:.78; border-style:dashed;}
+    .toc span{font-size:.92rem; line-height:1.25;}
+    .toc small{color:var(--muted); font-size:.68rem; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;}
+    .tap-note{font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; color:var(--muted); font-size:.86rem; line-height:1.7;}
+    .sticky{
+      position:sticky; top:0; z-index:10; margin:0 -14px 20px; padding:10px 14px 12px;
+      background:linear-gradient(180deg, rgba(247,242,232,.96), rgba(247,242,232,.72));
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid rgba(34,49,58,.08);
+    }
+    .controls{display:flex; gap:8px; align-items:center; overflow-x:auto; padding-bottom:2px; scrollbar-width:none;}
+    .controls::-webkit-scrollbar{display:none;}
+    button,.pill{
+      appearance:none; border:1px solid var(--line); background:rgba(255,250,240,.82); color:var(--ink);
+      border-radius:999px; padding:10px 13px; font-weight:700; white-space:nowrap;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      box-shadow:0 4px 12px rgba(40,34,25,.06);
+    }
+    button:active{transform:translateY(1px)}
+    .toggle.on{background:var(--accent); color:#fff; border-color:rgba(255,255,255,.2)}
+    .status{font-size:.8rem; color:var(--muted); margin-top:6px; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; line-height:1.45;}
+    .status strong{color:var(--accent);font-weight:900;}
+    section{scroll-margin-top:86px; margin:34px 0 48px;}
+    .section-head{margin-bottom:16px;}
+    .section-tag{font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif; color:var(--accent2); font-weight:800; letter-spacing:.12em; font-size:.75rem; text-transform:uppercase;}
+    h2{font-size:clamp(1.6rem,6vw,3.2rem); line-height:1.05; margin:6px 0 8px; letter-spacing:-.04em;}
+    .section-desc{margin:0; color:var(--muted); line-height:1.7; font-size:.98rem;}
+    .para-card{
+      position:relative;
+      background:rgba(255,250,240,.92);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:18px 16px 14px;
+      margin:12px 0;
+      box-shadow:0 12px 32px rgba(40,34,25,.10);
+      overflow:hidden;
+      touch-action:pan-y;
+    }
+    .para-card.playing{outline:3px solid rgba(44,88,113,.38); border-color:rgba(44,88,113,.62); border-left:6px solid var(--accent); box-shadow:0 0 0 6px rgba(44,88,113,.08), 0 18px 40px rgba(40,34,25,.12); background:linear-gradient(180deg, rgba(255,250,240,.98), rgba(244,249,250,.94));}
+    .para-card.playing::before{content:"Listening now"; position:absolute; right:12px; top:10px; font-family:ui-sans-serif,system-ui; font-size:.7rem; color:#fff; background:var(--accent); padding:5px 9px; border-radius:999px; letter-spacing:.02em; box-shadow:0 8px 18px rgba(44,88,113,.20);}
+    .en{font-size:clamp(1.04rem,4.3vw,1.38rem); line-height:1.78; letter-spacing:.003em; padding-right:4px;}
+    .jp{
+      margin:16px 0 0 auto;
+      width:min(92%, 640px);
+      padding:15px 15px 13px 16px;
+      border-radius:18px 18px 7px 18px;
+      background:linear-gradient(135deg, rgba(255,255,255,.78), rgba(105,123,79,.13));
+      color:var(--jp);
+      border:1px solid rgba(105,123,79,.30);
+      box-shadow:0 12px 26px rgba(40,34,25,.10);
+      font-family:'Hiragino Sans','Yu Gothic',system-ui,sans-serif;
+      font-size:.9rem; line-height:1.78; display:none;
+      position:relative;
+    }
+    .jp::before{
+      content:'JP original';
+      position:absolute; right:12px; top:-11px;
+      padding:3px 8px; border-radius:999px;
+      background:rgba(255,250,240,.96); color:var(--green);
+      border:1px solid rgba(105,123,79,.26);
+      font-family:ui-sans-serif,system-ui; font-size:.62rem; font-weight:800; letter-spacing:.04em;
+    }
+    .para-card.show-jp .jp{display:block; animation:jpDock .24s cubic-bezier(.2,.8,.2,1) both;}
+    .para-card.show-jp{border-color:rgba(105,123,79,.42);}
+    body.jp-mode-off .para-card.show-jp .jp,
+    body.jp-mode-off .para-card.force-jp .jp{display:none !important;}
+    body.jp-mode-always .para-card .jp{
+      display:block;
+      width:100%;
+      max-height:148px;
+      overflow:auto;
+      margin:14px 0 0;
+      padding:13px 14px 12px;
+      border-radius:15px;
+      font-size:.82rem;
+      line-height:1.72;
+      box-shadow:none;
+      background:linear-gradient(135deg, rgba(255,255,255,.62), rgba(105,123,79,.10));
+    }
+    body.jp-mode-always .jp::before{content:'JP';}
+    body.jp-mode-always .para-card.show-jp{border-color:var(--line);}
+    body.jp-mode-off .para-card{touch-action:manipulation;}
+    .jp{cursor:pointer;}
+    .para-card.jp-flash{animation:cardNudge .22s ease-out both;}
+    @keyframes jpDock{from{opacity:0; transform:translate(18px,8px) scale(.985)}to{opacity:1; transform:translate(0,0) scale(1)}}
+    @keyframes cardNudge{0%{transform:translateX(0)}45%{transform:translateX(-3px)}100%{transform:translateX(0)}}
+    .mini{display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:12px; color:var(--accent2); font-family:ui-sans-serif,system-ui; font-size:.77rem; font-weight:700;}
+    .quote-card{border-left:1px solid rgba(44,88,113,.20); box-shadow:inset 0 0 0 2px rgba(44,88,113,.055), 0 12px 32px rgba(40,34,25,.10);}
+    .outline-card{
+      border:1px dashed rgba(44,88,113,.28);
+      background:rgba(255,250,240,.55);
+      border-radius:var(--radius);
+      padding:16px 15px;
+      margin:12px 0;
+      color:var(--muted);
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      line-height:1.75;
+    }
+    .outline-card strong{color:var(--accent);}
+    .en strong{font-weight:900;color:var(--accent);background:linear-gradient(transparent 58%, rgba(44,88,113,.13) 58%);border-radius:.18em;padding:0 .03em;}
+    .principle{display:block; margin:.55em 0; padding-left:.2em;}
+    .footer-note{
+      background:rgba(36,55,70,.08); border:1px solid rgba(36,55,70,.11); border-radius:24px;
+      padding:18px 16px; color:var(--muted); line-height:1.8; font-family:ui-sans-serif,system-ui; font-size:.92rem;
+    }
+    .toplink{position:fixed; right:14px; bottom:14px; z-index:20; text-decoration:none; color:#fff; background:var(--accent); border-radius:999px; padding:12px 14px; font-family:ui-sans-serif,system-ui; font-weight:800; box-shadow:var(--shadow)}
+    .control-spacer{min-width:4px;}
+    @media (min-width:720px){
+      .app{padding-left:24px;padding-right:24px}.sticky{margin-left:-24px;margin-right:-24px;padding-left:24px;padding-right:24px}.toc{grid-template-columns:repeat(4,minmax(0,1fr))}.hero-card{padding:38px 34px}.para-card{padding:24px 24px 18px}
+    }
+    @media (prefers-color-scheme:dark){
+      :root{--bg:#162028;--paper:#1f2a31;--ink:#f3eadb;--muted:#b9b0a3;--line:rgba(255,255,255,.14);--jp:#f0dfc4;--shadow:0 18px 48px rgba(0,0,0,.3)}
+      body{background:linear-gradient(180deg,#15202a,#241f1a)}
+      .hero-card,.para-card,button,.pill,.toc a{background:rgba(31,42,49,.84)}
+      .sticky{background:linear-gradient(180deg, rgba(21,32,42,.96), rgba(21,32,42,.72))}
+      .jp{background:linear-gradient(135deg, rgba(31,42,49,.96), rgba(105,123,79,.14))}
+      .jp::before{background:rgba(31,42,49,.98)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="top">
+    <div class="hero">
+      <div class="hero-card">
+        <h1>Consulting × Iwata Mindset<br><span style="font-size:.48em;letter-spacing:-.02em;color:var(--accent2)">【Completed Edition】</span></h1>
+        <nav class="toc" id="toc"></nav>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="controls">
+        <button id="continueBtn">Continue</button>
+        <button class="toggle on" id="continuousBtn" aria-pressed="true">Continuous: ON</button>
+        <button id="speedBtn">Speed: 0.9×</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="prevBtn">Prev</button>
+        <button id="nextBtn">Next</button>
+        <button id="jpCurrentBtn">JP current</button>
+        <button id="stopBtn">Stop</button>
+        <button id="hideJpBtn">JP: Note</button>
+        <a class="pill" href="#top" style="text-decoration:none">Top</a>
+      </div>
+      <div class="status" id="status">Ready.</div>
+    </div>
+
+    <main id="content"></main>
+
+  </div>
+  <a class="toplink" href="#top">↑</a>
+
+<script>
+const sections = [
+  {
+    id:'intro',
+    tag:'Opening',
+    title:'This is not motivation. It is an operating system.',
+    desc:'The original opening is reshaped as spoken lecture English.',
+    items:[
+      {
+        en:'This is not a loose collection of motivational ideas. Think of it as an operating system you open when you try to make something happen: a way of resetting your mind into the right order. It applies to assigned work, and also to projects you set for yourself, such as study, creative work, travel, or rebuilding everyday life. It is not meant to be read once and admired. It is meant to be returned to whenever you feel lost.',
+        jp:'これはふわっとした精神論ではございませんの。**「何かを実現しよう」とするその瞬間に開いて、頭を正しい順番へリセットするためのOS**ですわ。頼まれたお仕事でも、自分で立てた企み——学び、創作、旅、暮らしの立て直し——でも同じこと。通読して感心しておしまい、ではなく、迷ったら何度でも戻ってくる場所として使ってくださいまし。'
+      },
+      {
+        en:'The material brings together three streams. First, the discipline of consulting: issue-driven thinking, the Pyramid Principle, hypothesis thinking, process consultation, constraints, and jobs-to-be-done. Second, the work philosophy of makers, especially Satoru Iwata, alongside Shigeru Miyamoto, Hironobu Sakaguchi, and Yozo Sakagami. Third, theories of support and freedom: capability, capacity development, and value. Philosophy and art also appear — Socrates, Popper, Nagarjuna, the Gita, and Duchamp — not as decoration, but as different names for the same structure.',
+        jp:'中身は、3つの流れを編み込んでおりますの。**コンサルの型**（安宅和人さんのイシュー思考、ミントのピラミッド、内田和成さんの仮説思考、シャインの関与様式、ゴールドラットの制約理論、クリステンセンのジョブ理論）。**作り手たちの仕事観**（お会いしたことはないけれど、はねさんが敬愛する岩田聡さんを中心に、宮本茂さん・坂口博信さん・坂上陽三さん）。そして**「支援」と「自由」の理論**（センのケイパビリティ、キャパシティ・ディベロップメント、宮田裕章さんの価値論）。ところどころに、哲学と美術のスパイスもひと振り——ソクラテス、ポパー、龍樹、ギーター、デュシャン。飾りではなく、**同じ骨格の別名**としてですのよ。'
+      },
+      {
+        en:'When these three streams connect, consulting helps you think correctly, the wisdom of makers helps you move people and change the situation in practice, and normative theory keeps you clear about what the work is for. At that point, the work is no longer merely elegant analysis. It becomes problem-solving that helps people act, and increases the freedom of the person you are supporting.',
+        jp:'**コンサルの型で「正しく考え」、作り手たちの知恵で「本当に動かし」、規範理論で「何のためか」を見失わない。** この3つが噛み合うと、実現は"きれいな分析"から、"人が動き、相手の自由が増える問題解決"へと変わりますのよ。'
+      }
+    ]
+  },
+  {
+    id:'layers',
+    tag:'Four layers',
+    title:'Do not mix the geological layers.',
+    desc:'A listening-friendly version of the four-layer map: OS, process, tools, and phrases.',
+    items:[
+      {
+        en:'The longer you use a tool, the more dangerous it becomes if its parts are mixed together. This operating system has four layers: the OS, the process, the tools, and the phrases.',
+        jp:'長く使う道具ほど、部品がごちゃ混ぜだと壊れてしまいますわ。このOSは、4つの層でできておりますの。'
+      },
+      {
+        en:'The OS is the underlying belief: what counts as value. The process is the sequence from accepting, or starting, the task to returning the outcome. Tools are thinking instruments, such as issue trees, MECE, pyramids, hypotheses and falsification, jobs-to-be-done, and the movement between concrete and abstract. Phrases are sentences you can actually say: when accepting a task, reporting progress, giving bad news, consulting, or making a proposal.',
+        jp:'- **OS**：実現の根っこの思想。「何を価値とみなすか」。\n- **プロセス**：引き受けて（企てて）から返すまでの順番。\n- **ツール**：その途中で使う思考道具（イシューツリー、MECE、ピラミッド、仮説と反証、ジョブ理論、具体⇄抽象、など）。\n- **型**：そのまま口に出せる言い方（受領・中間報告・悪い報せ・相談・提案）。'
+      },
+      {
+        en:'When you review the system, ask yourself this: which layer am I touching now? The OS is something to believe in. The process is something to follow. The tools are something to use. The phrases are something to say.',
+        jp:'読み返すときは「今わたくしはどの層を触っているのかしら」と意識すると、迷いませんわ。**OSは信じるもの。プロセスは辿るもの。ツールは使うもの。型は言うもの。**'
+      },
+      {
+        en:'The map is simple. First comes the OS: the foundational sentence, the five principles, and the backbone. Then comes the process, from Phase A to Phase F. Across the whole process, you keep five lenses on. Finally, you learn how to operate the system: adjusting depth, using phrase templates, passing the thirty-second gate, remembering the motto, and continuing to refine the system.',
+        jp:'地図を一枚だけ。**OS**（土台の一行・5原則・背骨）→ **プロセス**（Phase A〜F、①〜⑯）→ 全工程を貫く**5枚のレンズ** → **運用**（深さの調整・型集・30秒ゲート・合言葉・育て方）。このページは上からこの順で並んでおりますから、迷子になったらここへ戻っていらしてね。'
+      }
+    ]
+  },
+  {
+    id:'foundation',
+    tag:'Core OS',
+    title:'The foundational sentence.',
+    desc:'The central rule is converted into spoken English, with the quote treated as a lecture thesis.',
+    items:[
+      {
+        en:'Even if you forget everything else, learn this one sentence by heart.',
+        jp:'ほかを全部お忘れになっても、ここだけは体に入れてしまいましょうね。'
+      },
+      {
+        en:'The value of the work is not determined by how much work you have done. It is determined by how far someone’s judgement, action, or sense of security has moved forward.',
+        jp:'**実現の価値は、こなした作業量ではなく、相手の判断・行動・安心がどれだけ前に進んだかで決まる。**',
+        quote:true
+      },
+      {
+        en:'You may stay up all night, produce thick documents, or sit through long meetings. But if nothing has moved for the person you are supporting, the value is zero. Conversely, if one short sentence allows them to decide, that sentence has already created serious value. This may sound strict, but it is also a form of permission: you do not have to solve the problem by sheer volume.',
+        jp:'徹夜で調べても、分厚い資料を作っても、長い会議をしても、相手の中で何ひとつ動いていなければ、価値はゼロ。逆に、たった一言で相手が「決められた」なら、それはもう十分に大きな価値ですのよ。少し厳しく聞こえるかもしれませんけれど、これは呪いではなく、むしろ肩の荷を下ろすお話でもあって——**量で殴らなくていい**、という許可でもありますの。'
+      },
+      {
+        en:'When we say someone has moved forward, we mean something concrete. They can make a judgement. They can narrow their options. They understand the risk. Their anxiety has fallen. Stakeholders now share the same view. Or it is clear who will do what next.',
+        jp:'「相手が前に進んだ」とは、具体的にはこのどれか。判断できた／選択肢を絞れた／リスクを理解できた／不安が減った／関係者の認識が揃った／次に誰が何をするか決まった。'
+      },
+      {
+        en:'Here, that person means the beneficiary of the work. It may be a client, a customer, a team, a family member, or, if the project is for yourself, your future self. This is why the system applies to exam study, travel planning, and tidying your room. What matters is not how much you completed today, but how far the future version of you can judge, act, and feel secure.',
+        jp:'ひとつだけ、言葉の定義を。ここでいう**「相手」とは、この実現の受益者**のことですわ。依頼主、顧客、チーム、家族——そして**自分のための企みなら、未来の自分**。試験勉強も、旅の計画も、部屋の片づけも、一行はそのまま成立しますの。今日こなした量ではなく、**未来の自分の判断・行動・安心がどれだけ前に進んだか**。だからこのOSは、仕事の内外を問わず、あらゆる「実現」に同じ顔で効きますのよ。'
+      },
+      {
+        en:'So the first question is always this: whose decision does this work need to move forward, and how far?',
+        jp:'だから、何かを引き受けた（あるいは企てた）瞬間に問うのは、いつも同じ一問ですわ。\n**この実現は、誰の・どの意思決定を・どこまで前に進めるためのものか。**',
+        quote:true
+      }
+    ]
+  },
+  {
+    id:'principles',
+    tag:'Five principles',
+    title:'The five principles of the OS.',
+    desc:'A compact spoken version of the five principles that fall out of the foundational sentence.',
+    items:[
+      {
+        en:'From the foundational sentence, five principles follow. These are the whole of what this operating system asks you to believe.',
+        jp:'上の一行から、演繹的に落ちてくる5つ。ここが"信じるもの"の全部ですの。'
+      },
+      {
+        en:'First: value is created only to the extent that your counterpart moves forward. The amount of labour is not the measure. Second: do not miss the question. A low-issue question produces little value, no matter how quickly, beautifully, or extensively you solve it. Third: do not wait for the perfect answer. Place a provisional answer — a hypothesis — then expose it to disconfirming evidence and improve it.',
+        jp:'1. **価値は、相手が前に進んだ分だけ生まれる**（作業量は関係ありませんわ）。\n2. **問いを外さない**。イシュー度の低い問いは、どれだけ速く・美しく・大量に解いても、価値はほとんど出ませんの。\n3. **正解を待たない**。仮の答え（仮説）を置いて進め、反証にさらして磨きますわ。'
+      },
+      {
+        en:'Fourth: keep facts, evaluations, risks, and actions separate. If you mix them, the discussion soon stops with either, so what, or, what is your evidence? Fifth: translate correctness into a form they can act on. Expertise is not there to overwhelm them. It is there to help them move.',
+        jp:'4. **事実・評価・リスク・アクションを分ける**。混ぜると、議論が「それで？」か「根拠は？」で止まってしまいますの。\n5. **正しさより、相手が動ける形に翻訳する**。専門性は相手を圧倒するためではなく、相手を動かすためにありますのよ。'
+      },
+      {
+        en:'Then add one spoonful from Iwata: look not at the symptoms, but at the root. And search for one move that can solve several problems at once.',
+        jp:'そして、この5つに岩田さんのひと匙を足しますわ——**症状ではなく根っこを見る。そして、複数の問題を一度に解く一手を探す。**',
+        quote:true
+      }
+    ]
+  },
+  {
+    id:'backbone',
+    tag:'OS backbone',
+    title:'Why the progress of the person you are supporting is the measure of value.',
+    desc:'Sen, Miyata, capacity development, Schein, Socrates, and Iwata are treated as one spoken line of reasoning.',
+    items:[{"en":"The foundational sentence and the five principles are not merely a matter of personal taste. A clear line runs through normative theory, the methodology of support, contemporary thinking about making things work, and Iwata’s everyday practice. In short: Sen gives the normative theory; capacity development and Schein give the method of support; Miyata brings the idea into contemporary practice; Iwata shows what it looks like in organisational life; and this operating system turns that line into your own practice.","jp":"土台の一行と5原則は、わたくしの好みで置いたものではございませんの。規範理論から支援の方法論、現代の実装思想、そして岩田さんの日常実践まで、一本の線がすっと通っておりますのよ。**セン（規範理論）→ CD・シャイン（支援の方法論）→ 宮田（現代の実装思想）→ 岩田さん（組織での日常実践）→ このOS（はねさんの実践）**。"},{"en":"Amartya Sen’s capability approach changes the measure of value. Goods and services are not valuable simply because they exist. They become valuable only when they are converted, inside their life, into functionings — that is, what the person can actually do or be — and then into capabilities, meaning the real freedom to choose valuable ways of doing and being.","jp":"アマルティア・センのケイパビリティ・アプローチは、価値の物差しをこう据え替えますの。**財（モノやサービス）それ自体に価値はない。財が相手の中で「機能（実際にできること・あれること）」に変換され、さらに「ケイパビリティ（価値ある機能を選び取れる自由の幅）」を広げたとき、はじめて価値になる。**"},{"en":"A thick report is a good. By itself, it has no value. If your counterpart can make a judgement because of it, it has become a functioning. And if the person can continue choosing and moving forward independently afterwards, it has become capability. That is the deepest form of value in this system.","jp":"- 分厚い報告書＝**財**。それだけでは価値ゼロ。\n- 相手がそれで判断できた＝**機能**。ここで初めて価値。\n- 相手が以後も自分で選び進められる＝**ケイパビリティ**。ここが最深の価値。"},{"en":"Notice what this means. The foundational sentence — value is not determined by labour, but by the progress of the person you are supporting — is not just a useful slogan. It has a theoretical name. The permission not to overwhelm the problem with volume is backed by the logic of a Nobel Prize-winning economist.","jp":"お気づきかしら。これ、土台の一行（価値は作業量でなく相手の前進で決まる）の**理論名**ですのよ。「量で殴らなくていい」という許可には、ノーベル経済学賞受賞者の裏書きが付いておりましたの。","quote":true},{"en":"There is also an older structure that resembles this shift. Nagarjuna argued that things do not possess a fixed essence of their own; they arise through relations. The same report can be treasure in one context and a stack of paper in another. Value does not live inside the object. It emerges in relation. That logic, still sharpened in Tibetan Buddhist training in reasoning, can also be used as a theory of value.","jp":"ちなみに「財それ自体に価値はない」という据え替え、二千年近く前のインドに同じ骨格がありますのよ。龍樹（ナーガールジュナ）は、あらゆるものは固有の本質（**自性**）を欠き、関係の中でのみ立ち現れると論じましたわ（**縁起**）。同じ報告書が、ある文脈では宝、別の文脈ではただの紙束。**価値は物に宿らず、関係に生起する**——チベット仏教が今も論理学の訓練として磨き続けているこの骨格は、そのまま価値論に使えますの。"},{"en":"Sen also gives us the idea of conversion factors. The same good is not converted into action in the same way for everyone. Personal, social, and environmental conditions determine whether a good can become a functioning. Much of the work of support is therefore the removal of conversion barriers.","jp":"もうひとつ、センには**変換要因**という道具がありますわ。同じ財でも、個人的・社会的・環境的な条件次第で「機能」へ変換できるかが変わる——そして支える側の仕事の相当部分は、この**変換障害の除去**ですの。"},{"en":"A residence status barrier is a clear example. It can block a person from working, living securely, or living with family, even when the person’s own ability is not the problem. In this language, that work can be defined very simply: legally remove institutional conversion barriers, and restore the person’s capability. The same pattern applies beyond immigration: identify the barrier, remove it, and restore your counterpart’s freedom to choose.","jp":"たとえば在留資格の壁——ご本人の能力と無関係に「働く・住む・家族と暮らす」への変換を止める、**制度的変換障害**の典型ですわ。だからこの領域の仕事は一行で定義できてしまいますの——**制度的な変換障害を合法的に解除し、本人のケイパビリティを回復する仕事**。そしてこの定義の骨組み——**変換障害を見つける→解除する→選べる自由を回復する**——は、領域を問わず使い回せますのよ。書類でも、会議でも、家族の困りごとでも。はねさんの通奏低音（制度の壁に阻まれる人を支える）は、センの語彙でそのまま圧縮できますの。"},{"en":"Finally, Sen emphasises agency. The measure is not simply whether someone feels satisfied. The deeper question is whether they can choose as an agent. In practical terms: deciding for your counterpart is not progress. Enabling your counterpart to decide for themselves is progress. This protects support from becoming well-intentioned paternalism.","jp":"最後に**エージェンシー**。センは「満足しているか」ではなく「主体として選べているか」で測りますの。実践翻訳：**「相手の代わりに決めてあげた」は前進ではない。「相手が自分で決められるようになった」が前進。** これが善意のパターナリズムへの防波堤ですわ。","quote":true},{"en":"Hiroaki Miyata’s work can be heard as an extension of this line. Instead of measuring value by one average standard, the focus shifts towards the diverse values of each person. Data and evidence are not there simply to produce an average. They are there to serve the context of this particular person in front of us.","jp":"センの延長線上に、宮田裕章さん（慶應）の議論を一段落だけ。最大多数の最大幸福＝単一の物差しの平均から、**一人ひとりの多様な価値**へ——データやエビデンスは平均のためではなく、目の前のこの相手の文脈のために使う、という現代の実装思想ですわ。"},{"en":"The practical translation is straightforward. When you decide what the exit of a task should be, and when you decide what counts as progress, you must measure it by their value axis, not by your own standard. The later framework of understanding, emotion, and practical stakes is therefore not just social technique. It is a response to the plurality of value.","jp":"実践翻訳：④で決める「出口」も、何をもって「前進」とするかも、**こちらの標準ではなく相手の価値軸で測る**。⑫（頭・心・腹）は処世術ではなく、価値の複数性への応答ですの——という理論的裏付けになりますのよ。"},{"en":"Capacity development, in international cooperation, reaches a similar conclusion from another direction. Capacity cannot be injected from the outside. It can only grow internally. What an external supporter can do is act as a catalyst. Ownership must remain on your counterpart’s side.","jp":"国際協力のキャパシティ・ディベロップメント論（UNDP／JICA）の核はひとつですの。**能力は外から注入できず、内発的にしか育たない。外部者にできるのは触媒まで。主体はつねに相手側（オーナーシップ原則）。**"},{"en":"So the best deliverable is one that increases the degree to which your counterpart can do more next time by themselves. Support that creates dependence may bring short-term revenue, but it reduces your counterpart’s capability. Sustainable continuation should come not from keeping the person you support unable, but from facing new and more difficult problems together.","jp":"実践翻訳：最良の成果物とは、相手の「次は自分でここまでできる」度合いを上げるもの。**依存を作る支援は、短期の実入りと引き換えに相手のケイパビリティを削る支援**ですわ。\n正直に申しますと、ここには「支える側の実利」との緊張がありますの。囲い込めば得をする構造は実在しますわ。でも解はシンプルで——**継続は「相手を無能に保つこと」からではなく「新しい難題」から来るべき**。前者の信頼は発覚した瞬間に全損、後者だけが⑯の複利に乗りますのよ。"},{"en":"Edgar Schein reaches the same place from the consulting canon. He distinguishes three modes of involvement: the expert model, where the consultant sells answers; the doctor model, where the consultant diagnoses and prescribes; and process consultation, where the consultant helps the other person solve the problem themselves. For complex human problems, Schein argues that we must begin from the third model.","jp":"同じ場所に組織開発の側から到達したのが、エドガー・シャインですわ。コンサルの関与様式は3つ——**答えを売る「専門家モデル」、診断して処方する「医師モデル」、相手が自分で解けるように関与する「プロセス・コンサルテーション」**。シャインは、人間系の複雑な問題ほど第三のモデルから始めるほかないと論じ、その入口を「教える前に、問う」（Humble Inquiry）に置きましたの。CDのオーナーシップ原則と、ほぼ同一の結論ですわ。"},{"en":"The entrance to that model is humble inquiry: ask before you teach. Its ancestor reaches back to Socrates, who did not inject knowledge into people, but helped them give birth to their own understanding through questions. Asking before teaching is not merely a modern consulting technique. It is one of philosophy’s oldest gestures.","jp":"そしてこの系譜の源流は、二千四百年前のアテナイまで遡れますのよ。ソクラテスは知識を注入せず、**問いによって相手自身に産ませました**——いわゆる**産婆術**。「教える前に、問う」は、哲学の始まりの所作でもありましたの。"},{"en":"This brings us to Satoru Iwata. He did not need to know all these theories in order to implement their best form. As president of HAL Laboratory, he met every employee one to one every six months, and fixed the opening question: are you happy right now? Not, how is your performance? Not, how is your progress? Are you happy?","jp":"**岩田さん：理論を知らずに、理論の最良の実装をやった人**\nHAL研の社長時代、岩田さんは半年ごとに全社員と一対一で面談し、最初の問いをこう固定しておられましたの——**「あなたはいま、ハッピーですか？」** 業績でも進捗でもなく、ですわ。"},{"en":"That question is humble inquiry in practice. It begins from their value axis, keeps ownership with the other person, and treats the person not as an object to be managed, but as a subject whose state matters. Iwata’s famous definition of what you are good at also fits Sen’s language: what you are good at is the place where your conversion efficiency is highest — where effort is most readily transformed into recognised function.","jp":"これはシャインの謙虚な問いかけ（そしてソクラテスの産婆術）の実践であり、宮田さん的に言えば相手の価値軸から始める態度であり、CDの「主体は相手」の日常運用ですの。ついでに、岩田さんの有名な得意の定義——**労力の割に、周りが認めてくれること**——も、センの語彙なら一行で書けますわ。**得意とは、あなたの変換効率（努力→機能）がいちばん高い場所。** だからこのOSで岩田さんは\"いい話枠\"ではなく、**規範理論の実装例**という席に座りますのよ。","quote":true}]
+  },
+  {
+    id:'issue',
+    tag:'Issue discipline',
+    title:'Why the question matters so much.',
+    desc:'Issue value, solution quality, the dog path, and Duchamp’s Fountain are converted into a listening chapter.',
+    items:[
+      {"en": "The value of the work can be broken down, roughly, into a simple multiplication: issue value multiplied by solution quality. Issue value means how worthwhile the question is. Solution quality means how reliable and useful the answer is.", "jp": "実現の価値は、ざっくりこう分解できますの。\n> **実現の価値 ＝ イシュー度（その問いに答える価値の高さ）× 解の質（その答えの確からしさ）**", "quote": true},
+      {"en": "Because it is multiplication, if either side is close to zero, the total value is also close to zero. That gives us one very practical rule about time: do not pour effort into raising the quality of an answer to a question that was not worth answering in the first place.", "jp": "掛け算ですから、片方がゼロに近ければ全体もゼロに近い。ここから、時間の使い方がひとつに決まりますわ。**イシュー度の低い問いを、解の質だけ上げて頑張ってはいけませんの。**"},
+      {"en": "Kazuto Ataka calls this the dog path. It is the path where effort is huge and return is tiny. The frightening thing is that conscientious people fall into it easily. They work hard, polish the answer, and still create little value, because the question itself was misdirected.", "jp": "安宅さんはこれを「犬の道」と呼びますのよ。労力は最大、リターンは最小——まじめな方ほどハマってしまう罠ですわね。"},
+      {"en": "The correct movement is therefore always the same. First move to the right: raise the issue value by choosing a question worth solving. Only then move upward: raise the quality of the answer. Once you understand that order, the direction of your effort changes.", "jp": "正しい順番はいつも、**まず右へ（イシュー度を上げる＝解く価値のある問いを選ぶ）、それから上へ（解の質を上げる）**。この一点を押さえるだけで、頑張りの\"向き\"が変わりますのよ。", "quote": true},
+      {"en": "A surprisingly radical demonstration of this multiplication appears in art history: Marcel Duchamp’s Fountain, from 1917. Duchamp took an ordinary urinal, signed it, and submitted it to an exhibition. If we measure only the quality of making, the technical solution is almost zero. He did not display exceptional craft in the usual sense.", "jp": "この掛け算の、美術史上もっとも過激な実証が**デュシャンの《泉》（1917）**ですわ。既製の便器に署名して展覧会へ——「解の質」（描く技術）は、ほぼゼロ。"},
+      {"en": "But Duchamp changed the question. The question was no longer, how skilfully has this object been made? It became, who decides what may be called art, and on what grounds? By shifting the question, he moved the issue value dramatically. Art history moved with it.", "jp": "でも「芸術とは巧く作ることか、それとも**何を芸術と呼ぶかを決める枠組み**のことか」へと**問いを付け替えた**瞬間、美術史が動きましたの。"},
+      {"en": "This is why the centre of modern art could move from technique to concept. It is also why the consulting rule matters outside consulting. A brilliant answer to the wrong question is still weak. A powerful reframing of the question can change the whole field of action.", "jp": "以後の現代アートの中心が技巧からコンセプトへ移ったのは、掛け算の左の項——**イシュー度がそれほどまでに支配的**だから。「まず右へ」は、美術館でも証明済みですのよ。", "quote": true}
+    ]
+  },
+  {
+    id:'phase-a',
+    tag:'Phase A',
+    title:'Accepting means forming an initial diagnosis.',
+    desc:'The first practical phase: question the task name, identify the decision, take the issue, decide the exit, and cut the scope before moving your hands.',
+    items:[
+      {
+            "en": "Phase A begins at the moment you accept, or launch, a piece of work. At that point, about eighty per cent of the outcome is already shaped by your initial diagnosis. If you do this part carefully, everything that follows becomes easier. Before moving your hands, place five things on the table.",
+            "jp": "実現は、引き受けた瞬間の見立てで8割決まりますの。ここを丁寧にやると、後の全工程がぐっと楽になりますわ。焦って手を動かす前に、5つだけ置きましょうね。"
+      },
+      {
+            "en": "First, question the task name. Phrases such as, please look into this, please prepare a set of slides, please take the minutes, or please organise this nicely, are usually not the real request. They are work labels. The real order is hidden underneath them.",
+            "jp": "**① 作業名を疑う**\n「調べておいて」「資料作って」「議事録取っておいて」「いい感じに整理して」——これらは**作業名**であって、依頼そのものではありませんの。奥にある本当の注文を取りにいきますわ。"
+      },
+      {
+            "en": "When someone says, please look into this, they often need material for a judgement. When they ask for a set of slides, they often need a tool to persuade someone. Minutes are often needed to fix agreements, open questions, responsibilities, and next actions. And when someone says, organise this nicely, they often want to see what the problem is and where to start.",
+            "jp": "- 「調べておいて」→ たいてい、**判断材料がほしい**。\n- 「資料を作って」→ たいてい、**誰かを納得させる道具がほしい**。\n- 「議事録を取って」→ たいてい、**合意事項・未決・責任・次アクションを固定してほしい**。\n- 「いい感じに整理して」→ たいてい、**何が問題で、どこから手をつけるかが見える状態にしてほしい**。"
+      },
+      {
+            "en": "The same rule applies when the client is your future self. When you say, I really must do this soon, the hidden request is often to reduce future anxiety or increase the freedom of the future you. If you run without taking that hidden order, the task may be completed, while the real purpose remains unmet.",
+            "jp": "- 「そろそろ〇〇やらなきゃ」（自分への依頼）→ たいてい、**将来の不安を減らしたい／選べる自由を増やしたい**。\nここを取らずに走ると、作業は終わるのに実現は終わらない、という一番切ない事態になりますの。"
+      },
+      {
+            "en": "This movement has a theoretical name: Christensen’s jobs-to-be-done theory. People do not hire an output for the output itself. They hire it to get a job done. So the question is: what job is the other person hiring this output to do? A functional job, such as making a decision; an emotional job, such as feeling reassured; or a social job, such as being able to explain the situation to senior stakeholders.",
+            "jp": "この動きには、じつは理論名がついておりますの——クリステンセンの**ジョブ理論**。人は成果物を買うのではなく、**片付けたい用事（ジョブ）のために成果物を「雇う」**。だから定型の問いはこう。**「相手はこの成果物を、どんな用事を片付けるために雇うのかしら。機能的な用事（判断したい）だけでなく、感情的な用事（安心したい）、社会的な用事（上に説明できる形がほしい）は何かしら。」**"
+      },
+      {
+            "en": "Iwata’s idea of expanding the gaming population can also be read in this way. The point was not simply to win a hardware performance race. It was to notice the jobs of people who had not previously played games: family time, shared play, or anxiety about ageing. In that frame, the real competitor was not another game console. The real competitor was non-consumption.",
+            "jp": "岩田さんの「ゲーム人口の拡大」も、性能競争ではなく「ゲームに触れてこなかった人の用事」（家族の団らん、脳の衰えへの不安）を取りにいったジョブ理論の実例ですわ——競合は他社のゲーム機ではなく、**無消費**でしたのよ。"
+      },
+      {
+            "en": "Second, identify the decision. Who wants to decide what? What must become clear for them to move forward? And how much clarity is enough for now? Until you can answer these three questions, it is safer not to begin research or document production.",
+            "jp": "**② 意思決定を特定する**\n誰が・何を決めたいのか。何が分かれば前に進むのか。どこまで分かれば、いったん十分なのか。この3つに答えられないうちは、調査にも資料作成にも入らない——が安全ですわ。",
+            "quote": true
+      },
+      {
+            "en": "Third, take the issue. An issue is a question whose answer changes the next action. The broad question must be narrowed until it reaches the level at which behaviour changes.",
+            "jp": "**③ イシューを取る**\nイシューとは、**答えが出ると次の行動が変わる問い**。広い問いを、行動が変わる粒度まで絞りますの。",
+            "quote": true
+      },
+      {
+            "en": "For example, do not stop at, why are sales falling? Ask whether the main cause is a decline in new acquisition or a decline in retention. Do not stop at, make the slides easier to understand. Ask whether executives are hesitating because they distrust the return on investment, or because operating responsibility is unclear. Do not stop at, study English. Ask whether the missing piece is vocabulary, instant spoken response, or exposure to live situations.",
+            "jp": "- ✗「売上が落ちている理由を調べる」→ ○「売上低下の主因は、新規獲得の減少か、既存の継続率低下か」\n- ✗「資料を分かりやすくする」→ ○「役員がA案を承認できない理由は、投資対効果への不安か、運用責任の曖昧さか」\n- ✗「英語を勉強する」→ ○「いま足りないのは、語彙か、瞬発の口頭表現か、場数か」"
+      },
+      {
+            "en": "If the question remains on the left-hand side, almost any effort becomes thin. Once it is narrowed to the right-hand side, the work suddenly begins to move. The issue is not a decorative heading. It is the steering wheel.",
+            "jp": "左のままだと何をしても薄まり、右まで絞ると一気に前に進みますわ。"
+      },
+      {
+            "en": "Fourth, decide the exit first. What is this work supposed to produce: a decision, an organised set of options, a list of risks, alignment among stakeholders, or a shared understanding of the current situation? If the exit changes, the output and the way you present it must also change. If you build without clarifying the exit, you may produce something impressive that still fails to land.",
+            "jp": "**④ 出口を先に決める**\nこの実現のゴールは、次のどれかしら。**意思決定／選択肢の整理／リスクの洗い出し／合意形成／現状共有。** 出口が違えば、作るものも見せ方も変わりますの。ここを曖昧にしたまま作ると、力作なのに刺さらない、が起きますわ。"
+      },
+      {
+            "en": "Fifth, cut the scope, completion conditions, and milestones. The more abstract the work is — the less the method is already decided — the more you must cut the frame yourself. This is exactly how a reliable person behaves.",
+            "jp": "**⑤ スコープ・完了条件・節目を切る（＝枠を自分で切る）**\n抽象度が高い実現（やり方が決まっていないもの）ほど、枠は自分で切りますの。ここは\"安心して任せられる人\"の動き方そのものですわ。"
+      },
+      {
+            "en": "Start with why. Why do this now? Is not doing it a possible option? Can you state the meaning of the work in your own words? Then define what and how far: what counts as completion, what is the minimum acceptable line, and what is outside the scope this time.",
+            "jp": "- **なぜやるか**：なぜ今これを。やらない判断はあり得るか。意義を自分の言葉で言えるか。\n- **何をどこまでやるか**：完了条件は何か。最低ラインはどこか。今回やらないことは何か。"
+      },
+      {
+            "en": "Next, set time in milestones rather than only a final deadline: current-state understanding, issue organisation, direction proposal, review, and finalisation. The aim is not to proceed exactly as planned. The aim is to see deviations from the plan early.",
+            "jp": "- **いつまでにやるか**：最終期限だけでは弱い。現状把握→論点整理→方針案→レビュー→最終化、と節目を刻む。**計画どおり進むことより、計画とのズレが早く見えることが大事。**",
+            "quote": true
+      },
+      {
+            "en": "Also prepare options and decision criteria. Do not jump to a single answer immediately. Place several options side by side, and add criteria such as speed, certainty, cost, operational burden, acceptability, and scalability. Options alone produce a discussion of preference. Options with criteria produce a discussion of work.",
+            "jp": "- **選択肢と決定軸**：最初から1案に飛びつかない。複数案を置き、速さ・確実性・コスト・運用負荷・納得性・拡張性などの軸を添える。**選択肢だけだと\"好み\"の議論、軸があると\"仕事\"の議論になる。**"
+      },
+      {
+            "en": "Finally, design proactive sharing and consultation. If you answer only after someone asks, you are already late. Decide who should help you get the work to sixty per cent, who must be involved before the work gets blocked later, and where and how often you will show progress. The aim is to create, in advance, a state where no one has to ask, how is that going?",
+            "jp": "- **攻めの共有・相談**：聞かれてから答えるのは遅い。誰と話して60点にするか、誰を巻き込まないと後で止まるか、どの場・どの頻度で見せるか。「あれ、どうなってます？」と言われない状態を、先に作る。"
+      }
+]
+  },
+  {
+      "id": "phase-b",
+      "tag": "Phase B",
+      "title": "Design before you research.",
+      "desc": "Hypotheses with verification conditions, empty boxes, and structure across horizontal and vertical thinking.",
+      "items": [
+          {
+              "en": "Once the initial diagnosis is in place, do not begin by researching. First, draw the blueprint. Phase B is the design phase: place a testable hypothesis, prepare empty boxes for the output, and structure the problem before the information starts to flood in.",
+              "jp": "見立てができたら、いきなり調べませんの。先に\"設計図\"を引きますわ。"
+          },
+          {
+              "en": "Sixth, place a hypothesis, but attach a verification condition to it. A hypothesis is not the same thing as rushing forward with an assumption. It is a provisional answer created precisely so that you can test it.",
+              "jp": "**⑥ 仮説を置く（検証条件つき）**\n仮説は、思い込みで突っ走ることでは**ございませんの**。**検証するための仮の答え**ですわ。良い仮説には、必ず検証条件がくっついておりますの。",
+              "quote": true
+          },
+          {
+              "en": "It is not enough to say, perhaps A is the cause. You need to add: if A is the cause, then fact B should be visible. It is not enough to say, this proposal should pass. You need to add: if it does not pass, the other person is likely to react to C.",
+              "jp": "- 「Aが原因では？」だけでは足りない → **「Aが原因なら、Bという事実が見えるはず」**まで。\n- 「この提案は通るはず」だけでは足りない → **「通らないとしたら、相手はCに反応するはず」**まで。"
+          },
+          {
+              "en": "A hypothesis narrows what you need to look at. Without a hypothesis, you are forced to look at everything. That makes you slow, reduces feedback, and stops learning. So do not wait for the correct answer. Place a hypothesis early, then expose it quickly to evidence that might break it.",
+              "jp": "仮説があると、見るべき情報が絞れますわ。仮説がないと、全部見るはめになり、遅くなり、フィードバックが減り、学習が止まる。**だから正解を待たず、仮説を置いて、早く反証にさらしますの。**"
+          },
+          {
+              "en": "There is a theoretical name for this discipline: Popper’s falsifiability. The line between science and pseudo-science is not whether something can be proved correct. It is whether the claim is shaped in such a way that it could be judged wrong. Adding a verification condition is the practice of placing your hypothesis on the scientific side of that line.",
+              "jp": "この規律にも理論名がありますのよ——**ポパーの反証可能性**。科学と似非科学を分ける線は「正しいと証明できるか」ではなく、**「間違いだったと判定できる形をしているか」**。検証条件を付けるとは、自分の仮説を科学の側に置く作法ですの。"
+          },
+          {
+              "en": "Seventh, create empty boxes before you research. Before gathering information, prepare the skeleton of the output: conclusion, evidence, unknowns, risks, and next actions. Leave the boxes empty at first.",
+              "jp": "**⑦ 空箱を先に作る**\n調査の前に、アウトプットの骨格＝**空箱**を作ってしまいますわ。**結論／根拠／未確認／リスク／次アクション**——この見出しだけ、中身が空のまま先に置きますの。",
+              "quote": true
+          },
+          {
+              "en": "This makes your ignorance visible. You can see, at a glance, what you do not yet know. Research is no longer a journey that starts from zero. It becomes the work of filling the holes in the structure. That is why both speed and precision improve at the same time.",
+              "jp": "こうすると、「自分が何を分かっていないか」が一目で見えますわ。以後の調査は、ゼロから探す旅ではなく、**空いた穴を埋める作業**に変わりますの。これだけで、速度と精度が両方上がりますのよ。"
+          },
+          {
+              "en": "Eighth, structure the problem. Structuring is not about arranging information beautifully. It is about creating the necessary boxes for the question you are trying to answer. The type of question determines the type of box.",
+              "jp": "**⑧ 構造化する（横の整理と、縦の往復）**\n構造化は、情報を美しく並べることでは**なく**、答えるべき問いに対して**必要な箱を作る**こと。問いの種類で、使う箱が変わりますわ。",
+              "quote": true
+          },
+          {
+              "en": "If you are looking for causes, use a why tree. If you are looking for actions, use a how tree. If you are making a judgement, use options and decision criteria. If you are persuading someone, use claim and evidence. If you are looking at risk, separate likelihood, impact, detectability, and countermeasures.",
+              "jp": "- 原因を探す → **Whyの木**\n- 打ち手を探す → **Howの木**\n- 判断する → **選択肢 × 決定軸**\n- 説得する → **主張 × 根拠**\n- リスクを見る → **発生可能性・影響度・検知可能性・対策**"
+          },
+          {
+              "en": "MECE is useful, but worshipping perfect MECE makes practical work slow. What matters is not perfect classification, but decomposition that helps the decision. Sales may be split into number of customers, unit price, and retention. Complaints may be split into expectation gaps, actual harm, and response delay. Persuasion may be split into understanding, emotion, and practical stakes. A weak document may be diagnosed through its question, conclusion, evidence, reader assumptions, and next action.",
+              "jp": "MECEは便利ですけれど、完全なMECEを拝みすぎると遅くなりますの。実務で効くのは、完全な分類より**意思決定に効く分解**ですわ。\n- 売上 → 客数・単価・継続率\n- クレーム → 期待値のズレ・実害・対応遅延\n- 納得 → 頭の理解・心の抵抗・腹の利害\n- 刺さらない資料 → 問い・結論・根拠・読み手の前提・次アクション"
+          },
+          {
+              "en": "Structure also has a vertical dimension. When the discussion gets stuck, move one level up and ask: what is this for? That is the level of purpose. When the discussion starts to slide away, move one level down and ask: for example, what exactly? That is the level of cases and numbers.",
+              "jp": "そして構造化には、横だけでなく**縦**もありますの（細谷功『具体と抽象』）。議論が詰まったら一段**上げて**「そもそも何のため？（目的）」を問い、話が滑り出したら一段**下げて**「たとえば？（事例・数字）」で着地させる。"
+          },
+          {
+              "en": "If you stay too high, you get abstraction without traction. If you stay too low, you get short-sighted detail. The speed with which you can move up and down between abstraction and concrete evidence is the speed of your thinking.",
+              "jp": "上げっぱなしは空論、下げっぱなしは近視。**往復の速さが、思考の速さ**ですのよ。",
+              "quote": true
+          },
+          {
+              "en": "The aim is not to produce a beautiful diagram. The aim is to find the one place where movement will change the result. Phase B is successful when your research is no longer scattered effort, but a controlled search guided by a question, a hypothesis, and a structure.",
+              "jp": "目的は、きれいな図ではありませんの。**どこを動かせば結果が変わるか、その一点を見つけること。**"
+          }
+      ]
+  },
+  {
+    "id": "phase-c",
+    "tag": "Phase C",
+    "title": "Validate with facts, then try to break your own answer.",
+    "desc": "Critical thinking as a discipline for judgement: evidence, assumptions, counter-evidence, consequences, and the separation of facts, evaluation, risks, and actions.",
+    "items": [
+        {
+            "en": "Once the blueprint is ready, you test it against reality. Phase C is the validation phase. You support your provisional answer with facts, and then, deliberately, you try to break it yourself before reality breaks it for you.",
+            "jp": "設計図ができたら、事実で確かめ、そして自分から壊しにいきますわ。"
+        },
+        {
+            "en": "Ninth, support the answer with facts, and break it through falsification. Critical thinking is not a technique for defeating another person in argument. It is a technique for improving the quality of judgement by examining evidence, assumptions, counter-evidence, and consequences.",
+            "jp": "**⑨ 事実で支え、反証で壊す（クリティカルシンキング）**\nクリティカルシンキングは、相手を論破する技ではありませんの。**判断の質を上げるために、根拠・前提・反証・帰結を見る技術**ですわ。",
+            "quote": true
+        },
+        {
+            "en": "Every time, pass the conclusion through a small set of questions. What is the evidence for this conclusion? Is that evidence a fact, an interpretation, or a guess? Is there another explanation? Are there facts that are inconvenient for my preferred answer? If I am wrong, what will happen? And what new information should make me change my conclusion?",
+            "jp": "毎回、この問いを通しますの。\nこの結論の根拠は何か／その根拠は事実か、解釈か、推測か／別の説明はないか／自分に都合の悪い事実はないか／外れたら何が起きるか／どんな情報が入れば結論を変えるべきか。"
+        },
+        {
+            "en": "The point is not suspicion for its own sake. The point is suspicion in the service of judgement. Criticism for the sake of criticism stops the work. Criticism for the sake of judgement moves the work forward. So the more strongly you want your own proposal to pass, the more seriously you should first try to break it yourself.",
+            "jp": "大事なのは、疑うこと自体ではありませんの。**判断のために疑う**こと。批判のための批判は実現を止め、判断のための批判は実現を進めますわ。だから、自分の案を通したいときほど、**まず自分の案を一度、自分で壊しますの。**",
+            "quote": true
+        },
+        {
+            "en": "Tenth, separate facts, evaluation, risks, and actions. The classic Japanese consulting pattern is sky, rain, umbrella: the sky is cloudy, so it may rain, therefore we take an umbrella. Here, we add one more layer: risk. Without that extra layer, the conversation often becomes unclear at precisely the moment when someone needs to decide.",
+            "jp": "**⑩ 事実・評価・リスク・アクションを分ける**\n古典的な「空・雨・傘」（事実→解釈→行動）に、リスクを一段足した形ですわ。ここが混ざると、途端にお話が通じなくなりますの。",
+            "quote": true
+        },
+        {
+            "en": "For example, the fact is: the other party said, we will consider it. The evaluation is: the probability of winning the order appears high. The risk is: the final decision-maker has not yet been confirmed. The action is: before the next meeting, confirm the decision-maker and the budget range.",
+            "jp": "- **事実**：「先方は\"検討する\"と言った」\n- **評価**：「受注確度は高い」\n- **リスク**：「ただし決裁者確認が未了」\n- **アクション**：「次回までに決裁者と予算枠を確認する」"
+        },
+        {
+            "en": "If you give only facts, the listener is left asking: so what? If you give only evaluation, the listener is left asking: what is the evidence? With all four in place — fact, evaluation, risk, and action — they can finally move.",
+            "jp": "事実だけだと「それで？」に、評価だけだと「根拠は？」になりますわ。4つ揃えて、はじめて相手は動けますのよ。",
+            "quote": true
+        },
+        {
+            "en": "This phase is where the system becomes honest. A hypothesis without facts is merely a preference. Facts without evaluation are just a pile of observations. Evaluation without risk is overconfident. Risk without action creates anxiety. Phase C ties them together so that judgement can become movement.",
+            "jp": "Phase C補足：仮説は事実で支え、評価はリスクとアクションまで分けて渡す。そうして初めて、判断が次の動きに変わります。"
+        }
+    ]
+},
+  {
+    id:'phase-d',
+    tag:'Phase D',
+    title:'Communicate in the order that lets the other person decide.',
+    desc:'Pyramid structure, So what and Why so, and adapting to head, heart, and belly.',
+    items:[
+    {
+        "en": "Phase D is where correct thinking becomes communicable. Even if your reasoning is sound, they cannot move unless it is given in a form they can follow, trust, and use for judgement. The aim is not to display how much you know. The aim is to arrange the material so that they do not get lost.",
+        "jp": "## 🗣️ Phase D｜伝える {color=\"blue\"}\n正しく考えても、伝わる形になっていなければ相手は動けませんの。"
+    },
+    {
+        "en": "Eleventh, use the pyramid so the listener can move without confusion. The point of the pyramid structure is not simply to speak from the conclusion. Its deeper purpose is to make the relationship between the claim and its grounds visible in the order that the listener needs.",
+        "jp": "**⑪ ピラミッドで、相手が迷わない順に**\nピラミッドストラクチャーの本質は「結論から話す」ことでは**なく**、主張と根拠の関係を、相手が迷わない形にすることですわ。",
+        "quote": true
+    },
+    {
+        "en": "The basic shape is simple. First, state the claim: I recommend option A. Then give the reasons: there are three reasons. Then give the evidence that supports each reason. Finally, state the implication: therefore, the next step should be B.",
+        "jp": "基本形はこれ。\n- **主張**：私はAを推す。\n- **理由**：理由は3つ。\n- **根拠**：各理由を支える事実がある。\n- **含意**：だから、次にBをすべき。"
+    },
+    {
+        "en": "This pyramid has two engines. From the bottom upwards, ask: so what? From the top downwards, ask: why so? If both directions work, the logic will not collapse. Each piece of evidence points upwards to a meaningful claim, and each claim can be traced downwards to evidence.",
+        "jp": "このピラミッドには上下2つのエンジンがありますの。下から上へは「**So what?（だから何？）**」、上から下へは「**Why so?（なぜそう言える？）**」。この2方向が両方通っていれば、論理は崩れませんわ。",
+        "quote": true
+    },
+    {
+        "en": "However, conclusion first is not always the correct order. If the listener already shares the background, begin with the conclusion. If the background is not shared, give a brief frame first. Do not speak in the order that feels convenient to you. Speak in the order that allows the other person to understand, accept, and decide.",
+        "jp": "ただし、いつも結論から、が正解ではありませんの。前提が揃った相手には結論から。揃っていない相手には短い背景を先に。**自分が言いたい順ではなく、相手が理解し・納得し・判断できる順**に出しますわ。",
+        "quote": true
+    },
+    {
+        "en": "Twelfth, adapt the delivery to what they know, how they feel, and what they have at stake. The head means what they know and what they do not yet know. The heart means their emotional state: are they positive, anxious, angry, or simply not interested? The belly means their practical stake: what they care about, what they are responsible for, and where they may be exposed to risk.",
+        "jp": "**⑫ 頭・心・腹に合わせる**\n同じ中身でも、相手の状態で最適な渡し方が変わりますの。3つを見ますわ。\n- **頭**：何を知っていて、何を知らないか。\n- **心**：前向きか、不安か、怒っているか、興味が薄いか。\n- **腹**：何を重視し、どこで責任を問われる立場か。"
+    },
+    {
+        "en": "For a manager who already understands the background, start with the conclusion. For an executive who does not share the premises, begin with a short context. For an anxious person, show the risks and the countermeasures early. For people on the front line, translate the idea into what will actually change tomorrow.",
+        "jp": "前提のある上司には結論から。前提のない役員には短い背景を。不安の強い相手にはリスクと対策を先に。現場には理念より「明日、何が変わるか」を。"
+    },
+    {
+        "en": "This is not flattery. It is translation. Expertise is not being softened in order to please someone. It is being arranged so the other person can judge. If the purpose is action, the right form of communication is the form that increases their capacity to move.",
+        "jp": "——媚びではありませんの。**相手が判断できる順番で情報を渡すため**の翻訳ですわ。",
+        "quote": true
+    },
+    {
+        "en": "Buddhist teaching has a useful parallel: teaching according to the listener, sometimes described as giving the medicine appropriate to the illness. The same truth may need to be expressed differently depending on the person who receives it. In that sense, translation is not compromise. It is the condition that allows truth to work.",
+        "jp": "ちなみにこの「相手に応じて渡し方を変える」、仏教では**対機説法**（応病与薬）と申しますの。同じ真理でも、聞き手の器に合わせて説き方を変える——**翻訳は媚びではない**と、二千五百年前から言い切られておりますのよ。",
+        "quote": true
+    },
+    {
+        "en": "Phase D therefore links logic and care. The pyramid keeps the argument sound. Head, heart, and belly keep the delivery humane and usable. Together, they turn correct analysis into a message that another person can actually carry into action.",
+        "jp": "Phase D補足：ピラミッドで論理を崩さず、頭・心・腹で渡し方を調整する。正しい分析を、相手が実際に動けるメッセージへ変える章です。"
+    }
+]
+  },
+  {
+    id:'phase-e',
+    tag:'Phase E',
+    title:'Return with a proposal, not merely an observation.',
+    desc:'Options, decision criteria, recommendation, next actions, and practical design that people can actually move with.',
+    items:[
+    {
+        "en": "Phase E is where correct thinking has to become movement. This is the point shared by consultants, lawyers, and Satoru Iwata: saying something true is not yet enough. If the other person cannot act on it, the work is still only halfway complete.",
+        "jp": "## 🚀 Phase E｜動かす {color=\"blue\"}\nここが、コンサルにも法律家にも岩田さんにも共通する山場ですの。正しいことを言うだけでは、まだ半分ですわ。"
+    },
+    {
+        "en": "Thirteenth, return with a proposal. Do not stop at pointing out the problem. Take responsibility for the problem, and bring it back as options, decision criteria, a recommendation, and a next action. That is what makes it a proposal rather than a comment.",
+        "jp": "**⑬ 提案で返す**\n問題点の指摘で止まらない。**問題を引き取り、選択肢・決定軸・推奨・次アクションまで**持っていく。それが提案ですわ。",
+        "quote": true
+    },
+    {
+        "en": "A basic proposal sounds like this. At present, we have problem A, supported by evidence one and evidence two. There are three possible responses. Option A is fast, but risky. Option B is more robust, but takes more time. Option C sits in the middle. My recommendation is option B, because under the current constraint, reproducibility matters more than speed. The next step is to confirm this specific point first.",
+        "jp": "- 現状、Aという問題がある（根拠：①〇〇 ②〇〇）。\n- 打ち手は3つ。A案は速いがリスクあり／B案は堅いが時間がかかる／C案は中間。\n- 私は今回、B案を推す。理由は、今回の制約では速さより再現性が効くから。\n- 次の一手として、まず〇〇を確認する。"
+    },
+    {
+        "en": "Notice what this does. It does not force the decision-maker to accept your answer. Rather, it reduces the burden of deciding. It makes the trade-offs visible, names the axis of judgement, and gives the other person a shape in which a decision can be made.",
+        "jp": "提案は、相手に答えを押しつけることではなく、判断できる形を渡すことです。選択肢・決定軸・推奨・次アクションを揃えることで、相手の判断負荷を下げます。"
+    },
+    {
+        "en": "Fourteenth, implement the idea in a form that people and organisations can actually move with. No matter how correct the answer is, it will remain a drawing on paper if it does not fit the other person’s assumptions, emotions, incentives, and constraints.",
+        "jp": "**⑭ 人と組織が動ける形に実装する**\nどれだけ正しくても、相手の前提・感情・利害・制約に合っていなければ、絵に描いた餅で終わってしまいますの。",
+        "quote": true
+    },
+    {
+        "en": "So ask practical questions. Who has to agree? Who will be asked to do something tomorrow? Where might the organisation resist? What is the smallest step that still creates movement? What has to be monitored after the first step? These questions turn analysis into practical design.",
+        "jp": "「正しい」で止めず、「動く」まで運ぶために、誰の同意が必要か、明日誰が何をするか、どこで止まりそうか、最小の一手は何か、その後どこを見るかを考えます。"
+    },
+    {
+        "en": "This is why expertise exists in this operating system. Expertise is not there to overwhelm them. It is there to translate complexity into a form in which the other person can move. If the form does not move people, the expertise has not yet completed its job.",
+        "jp": "「正しい」で止めず、「動く」まで運ぶ。専門性は、相手を動ける形に翻訳するためにある——ここでもう一度、思い出してくださいまし。",
+        "quote": true
+    },
+    {
+        "en": "Phase E therefore changes the centre of gravity. Up to this point, you have identified the issue, designed the work, tested the hypothesis, and communicated the logic. Now you return with a proposal, and carry it into a form that can survive contact with people, incentives, and real constraints.",
+        "jp": "Phase E補足：ここまでで問いを取り、設計し、検証し、伝えました。ここからは、提案として返し、人・利害・制約に触れても動く形へ運びます。"
+    }
+]
+  },
+  {
+    id:'phase-f',
+    tag:'Phase F',
+    title:'Turn each experience into a reusable pattern.',
+    desc:'Recovery closes the loop: update the pattern, reduce uncertainty, and let trust accumulate as a result.',
+    items:[
+      {
+            "en": "Phase F is the recovery phase. After each piece of work, you convert the experience into a pattern that can be used next time. This is the part that creates compound growth. Without recovery, each task remains a one-off event. With recovery, each task becomes a small upgrade to the operating system.",
+            "jp": "## 🔁 Phase F｜回収する {color=\"blue\"}\n一回ごとに、経験を\"次に使える型\"へ変換しますわ。ここをやる人だけが、複利で伸びますのよ。"
+      },
+      {
+            "en": "Fifteenth, update the pattern as learning. Ask three questions every time. Was the hypothesis correct? If it was wrong, which assumption was wrong? And which pattern should be updated for next time? These questions turn experience into a reusable method.",
+            "jp": "**⑮ 学びとして型を更新する**\n仮説は当たったか。外れたなら、どの前提が違ったか。次回、どの型を更新するか。——この3問を必ず回しますわ。",
+            "quote": true
+      },
+      {
+            "en": "In Iwata’s terms, knowledge stops being mere information at the moment when something you have read connects with the work in front of you. To embody knowledge is not simply to know more. It is to transform knowledge into the shape of the next action.",
+            "jp": "岩田さん風に言えば、**本で読んだことと目の前の実現がつながった瞬間**、知識はただの情報でなくなりますの。血肉化とは、知識を増やすことではなく、**知識を次の行動の形に変える**ことですわ。"
+      },
+      {
+            "en": "In practice, this means doing a small after-action review. What did I expect? What actually happened? What did I miss? What sentence, empty box, checklist, or decision criterion should I carry into the next similar situation? The output should not be a vague reflection. It should be a changed behaviour.",
+            "jp": "Phase F補足：回収は感想ではなく、次の行動変更です。何を予想し、何が起き、何を見落とし、次回どの言い方・空箱・チェック項目・判断軸を変えるかまで落とします。"
+      },
+      {
+            "en": "Sixteenth, trust accumulates as a result. Frequent reporting, early bad news, returning a little more than expected, and preparing the next question before it is asked — these may look like kindness or good manners. In this operating system, they are something more precise.",
+            "jp": "**⑯ 信頼は「結果」として積み上がる**\n報告がマメ、悪い報せが早い、期待より少し多く返す、相手が次に聞きそうなことを先に用意する——これらは愛嬌や気配りのお話に見えて、実は違いますの。",
+            "quote": true
+      },
+      {
+            "en": "Giving bad news early is not about protecting your own evaluation. It is about giving the person you are supporting options while options still exist. Returning a little more than expected is not about displaying effort. It is about reducing the cost of the other person’s next thought.",
+            "jp": "**悪い報せを早く出すのは、評価を守るためではなく、相手が早く選択肢を持てるようにするため。** 期待より少し多く返すのは、頑張りを見せるためではなく、相手の次の思考コストを減らすため。"
+      },
+      {
+            "en": "So trust is not built merely by being a nice person. Trust is built by continuously reducing the other person’s uncertainty. Each time you make the situation clearer, earlier, and easier to act on, trust quietly accumulates.",
+            "jp": "そう、**信頼は、性格の良さではなく、\"相手の不確実性を減らし続けること\"で積み上がる**のですわ。",
+            "quote": true
+      },
+      {
+            "en": "This closes the process. Phase A diagnoses the work. Phase B designs it. Phase C tests it. Phase D communicates it. Phase E moves it. Phase F recovers it. Once the lesson has been recovered, the next piece of work begins from a slightly higher place.",
+            "jp": "Phase F補足：これで、Phase Aで見立て、Phase Bで設計し、Phase Cで検証し、Phase Dで伝え、Phase Eで動かし、Phase Fで回収する流れが閉じます。回収できた経験は、次の実現の出発点を少しだけ高くします。"
+      }
+]
+  },
+  {
+    id:'lenses-overview',
+    tag:'Five lenses',
+    title:'Five lenses that stay on throughout the process.',
+    desc:'The process is sequential, but the lenses are simultaneous: law, Iwata, constraints, hypothesis sources, and relationship design.',
+    items:[
+      {
+            "en": "From this point, we move from the process to the lenses. The process, from step one to step sixteen, is something you follow in order. The lenses are different. They are not steps. They are glasses that stay on throughout the whole process.",
+            "jp": "## 🔭 ここからは、全工程を貫く「5枚のレンズ」\nプロセス（①〜⑯）は順番に辿るもの。レンズは順番ではなく、**全工程に同時にかかる眼鏡**ですわ。"
+      },
+      {
+            "en": "There are five lenses. First, the shared structure between lawyers and consultants: reverse-engineering from the issue. Second, Iwata’s essence: looking at the root. Third, the theory of constraints: finding the weakest point. Fourth, the source of hypotheses: observation and conviction. Fifth, relationship design: extending the time horizon.",
+            "jp": "**①法律家との同型**（争点からの逆算）、**②岩田さんのエッセンス**（根っこの見方）、**③制約理論**（最弱の一点を見抜く）、**④仮説の産地**（観察と確信）、**⑤関係の設計**（時間軸を伸ばす）。"
+      },
+      {
+            "en": "Iwata once lived three positions at the same time: on his business card, president; in his head, game developer; in his heart, gamer. The lenses work in the same way. You do not switch them one by one. You keep them on together.",
+            "jp": "「名刺の上では社長、頭の中ではゲーム開発者、心の中ではゲーマー」——岩田さんは三つの立場を**同時に**生きた方でしたわ。レンズも同じ。掛け替えるのではなく、**掛けっぱなし**にしますのよ。",
+            "quote": true
+      }
+]
+  },
+  {
+    id:'lens-law',
+    tag:'Lens 1',
+    title:'Lawyers and consultants share the same underlying structure.',
+    desc:'Reverse-engineering from issues, thinking from the opposing side, and separating facts from evaluation.',
+    items:[
+      {
+            "en": "For someone who has studied law, there is already a weapon that can be used far beyond legal work. Lawyers and consultants handle very different materials. But the structure of their thinking is surprisingly similar. That similarity is the point of this first lens.",
+            "jp": "## 🏛️ レンズ①：法律家とコンサルの、同じ骨格 {color=\"purple\"}\n法律を学んだはねさんには、じつは**どの領域でも使える武器**が一本備わっておりますの。弁護士とコンサルは、扱う材料はまるで違いますわ。でも、思考の骨格はほとんど同じ——そこが面白いところですのよ。"
+      },
+      {
+            "en": "A lawyer deals with law, facts, evidence, risks, the other side’s arguments, and the judgement of a court or negotiating partner. A consultant deals with markets, organisations, customers, competitors, numbers, operations, and decision-makers. The materials differ, but the underlying pattern is the same.",
+            "jp": "弁護士は法律・事実・証拠・リスク・相手方の主張・裁判所や交渉相手の判断を、コンサルは市場・組織・顧客・競合・数字・オペレーション・意思決定者を扱いますわ。材料は違えど、骨格は同じですの。"
+      },
+      {
+            "en": "The first shared movement is reverse-engineering from the issue. A lawyer is not someone who simply lists every fact. A lawyer asks which fact matters for which legal requirement. In the same way, a consultant is not someone who simply lists every piece of information. A consultant asks which information matters for which decision. The common ability is to separate what matters from what does not, by working backwards from the issue.",
+            "jp": "- **争点から逆算する**：弁護士は事実を全部並べる人ではなく、どの事実がどの**要件**に効くかを見る人。コンサルも情報を全部並べる人ではなく、どの情報がどの**意思決定**に効くかを見る人。共通するのは、**関係あるものと関係ないものを、争点から逆算して切り分ける力**。要件事実の発想が、そのまま実現の武器になりますのよ。",
+            "quote": true
+      },
+      {
+            "en": "The second shared movement is to think from the opposing side. A lawyer looks first at unfavourable facts: what the other side will argue, and where the court is likely to be sceptical. A consultant does the same. Where will the board challenge this? Where will the field team resist? What will finance dislike? The more you want your own proposal to pass, the more you must first break it from the other side.",
+            "jp": "- **反対側から考える**：弁護士は不利な事実を先に見る。相手方ならどう主張するか、裁判所ならどこを疑うか。コンサルも同じで、役員ならどこを突くか、現場ならどこで止まるか、財務なら何を嫌がるか。**通したい案ほど、まず一度、反対側から壊す。**"
+      },
+      {
+            "en": "The third shared movement is to separate facts from evaluation. In law, the facts that can be shown by evidence are one thing, and the legal evaluation drawn from those facts is another. In business, the facts shown by data are one thing, and the managerial judgement drawn from them is another. The discipline used in Phase C — separating facts, evaluations, risks, and actions — works both in court and in the meeting room.",
+            "jp": "- **事実と評価を分ける**：証拠上いえる事実と、そこからの法的評価は別物。データ上いえる事実と、そこからの経営判断も別物。——⑩とまったく同じ規律が、法廷でも会議室でも効いておりますの。"
+      },
+      {
+            "en": "Now replace legal requirements with success conditions. Any project has success conditions, and some facts matter to those conditions while others do not. Once you see this, legal thinking is no longer confined to legal work. Reverse-engineering from the issue becomes a universal tool for making things happen.",
+            "jp": "そして「要件」を「**成功条件**」と読み替えれば、この骨格は法律の外でもそのまま走りますの。どんな実現にも成功条件があり、条件に効く事実と効かない事実がある——**争点からの逆算は、万能の逆算**ですわ。",
+            "quote": true
+      }
+]
+  },
+  {
+    id:'lens-iwata',
+    tag:'Lens 2',
+    title:'Satoru Iwata’s spoonful: from correct analysis to real movement.',
+    desc:'Next expansion: solve several problems at once, look at roots rather than symptoms, and connect knowledge to tomorrow’s action.',
+    items:[
+      {
+            "en": "Consulting methods alone can already take you quite far. They give you questions, hypotheses, structure, and proposals. But on their own, they can become a little rigid. Iwata’s spoonful changes the character of the work. It moves the work from correct analysis towards problem-solving that actually changes the situation in practice.",
+            "jp": "## 🎮 レンズ②：岩田聡さんのエッセンス {color=\"purple\"}\nコンサルの型だけでも、問い・仮説・構造化・提案でかなり戦えますわ。でも、それだけだと少し硬いの。岩田さんのひと匙で、実現は\"正しい分析\"から\"本当に動く問題解決\"へ近づきますのよ。"
+      },
+      {
+            "en": "The first spoonful is this: a good idea solves several problems at once. Iwata described this as an idea inherited from Shigeru Miyamoto. Ordinary improvement often crushes problems one by one: if it is slow, add people; if it is excessive, reduce volume. Sometimes that is necessary. But by itself, it becomes a contest of effort.",
+            "jp": "- **良いアイデアは、複数の問題を一度に解く**：宮本茂さん由来の考え方として、岩田さんは「アイデアとは複数の問題を一気に解決するもの」と語っておられますの。普通の改善は、問題を一つずつ潰す（遅いなら増員、多いなら削減…）。必要なときもあるけれど、それだけだと汗かき勝負ですわ。",
+            "quote": true
+      },
+      {
+            "en": "The stronger move is to find where several problems share one root, and then move them forward with one intervention. Imagine a team where documents are late, reviews are repeated, executives keep raising objections, and meetings run long. These look separate. But if the root is that the original issue and hypothesis were never agreed, then one early act — agreeing the issue and hypothesis at the beginning — can make everything lighter at once.",
+            "jp": "本当に効くのは、**複数の問題が根っこでつながっている場所を見つけ、一手で同時に前進させること**。たとえば「資料が遅い・レビューが多い・突っ込みが多い・会議が長い」——別々に見えて、根っこが「最初の問いと仮説が曖昧」なら、**冒頭でイシューと仮説を握るだけ**で、全部が同時に軽くなりますのよ。"
+      },
+      {
+            "en": "The second spoonful is to look not at the symptom, but at the root. When someone says a dish is too large, the real issue may be the taste. Work is similar. If a document is hard to understand, the root may not be design. It may be the absence of a conclusion. If replies are slow, the root may not be speed. It may be that progress is visible only at a level that leaves them anxious.",
+            "jp": "- **症状ではなく、根っこを見る**：「量が多い」と言われた料理の本当の問題が、実は「味」だったりしますの。実現も同じで、「資料が分かりにくい」の真因はデザインではなく\"結論がない\"ことかもしれず、「返信が遅い」の真因は速度ではなく\"相手が不安になる粒度でしか進捗が見えない\"ことかもしれない。",
+            "quote": true
+      },
+      {
+            "en": "Words that appear on the surface are often symptoms. Your work is to reach the real question underneath. In practice, this means you do not repair the visible complaint too quickly. You ask what condition would make several visible complaints disappear together.",
+            "jp": "**表に出た言葉は症状。根っこの問いを取りにいきますわ。**"
+      },
+      {
+            "en": "The third spoonful is to see strengths, weaknesses, and priorities together. Iwata spoke about guiding people and organisations towards places where their strengths can work and their weaknesses are less likely to surface. He also pointed out that the things worth doing are always more numerous than the things we can actually do. So priority is not optional. It is part of the work.",
+            "jp": "- **得意・不得意と、優先順位**：岩田さんは、得意が活き苦手が表面化しにくい方向へ組織を導くこと、そして「やった方がいいこと」は「実際にやれること」より多いから優先順位が要る、と語っておられますの。",
+            "quote": true
+      },
+      {
+            "en": "Every time you begin a piece of work, ask three questions. Where can I fight from strength? Where am I likely to have an accident? And in this case, what must come before everything else? If you try to do everything with equal force, you may become exhausted and still leave no durable result.",
+            "jp": "毎回、**自分が得意に戦える場所はどこか／事故りやすい場所はどこか／今回、何を何より優先するか**を決めますわ。ここを決めずに全部がんばると、疲れるわりに残りませんの。"
+      },
+      {
+            "en": "The fourth spoonful is to connect knowledge to something you can use tomorrow. Iwata often spoke, in effect, about the moment when something read in a book connects with the situation in front of you. At that moment, knowledge stops being mere information.",
+            "jp": "- **知識を、明日使える形につなぐ**：本の内容と身の回りがつながると知識がただの情報でなくなる、という趣旨のことも岩田さんは語っておられますわ。",
+            "quote": true
+      },
+      {
+            "en": "So after reading anything, ask: in which piece of work, meeting, report, or consultation can I use this tomorrow? Which failure can it prevent? Embodiment is not the act of collecting more knowledge. It is the act of converting knowledge into the shape of the next action.",
+            "jp": "だから読んだら必ず問いますの。**これは明日のどの実現・どの会議・どの報告・どの相談で使えるか。どの失敗を防げるか。** 血肉化は量ではなく、変換ですのよ。"
+      }
+]
+  },
+  {
+    id:'lens-toc',
+    tag:'Lens 3',
+    title:'Think from the constraint.',
+    desc:'Theory of Constraints, local optimisation, and Iwata’s practical examples: MOTHER 2 and Pokémon Gold and Silver.',
+    items:[
+      {
+            "en": "Iwata’s habit of looking at the root, and of searching for one move that solves several problems at once, can be given a managerial skeleton through Eliyahu Goldratt’s Theory of Constraints. In this lens, intuition is not left as intuition. It becomes a repeatable way of thinking.",
+            "jp": "岩田さんの「根っこを見る」「複数の問題を一度に解く一手」は、経営学ではゴールドラットの**制約理論（TOC）**として、すでに定式化されておりますの。直感に理論の骨を入れて、毎回まわせる形にしますわ。"
+      },
+      {
+            "en": "The core idea is simple. The output of an entire system is decided by its weakest point: the constraint, or bottleneck. A chain is only as strong as its weakest link. Once you accept that, two rather cold but useful consequences follow.",
+            "jp": "**核はひとつ**：システム全体の産出は、最も弱い一点（**制約＝ボトルネック**）で決まりますの。鎖の強さが最弱の輪で決まるのと同じですわ。ここから、冷たいほど明快な系が2つ落ちてきますのよ。",
+            "quote": true
+      },
+      {
+            "en": "First, improving anything other than the constraint does not move the whole system forward. It may make you busy. It may even make one local part look better. But it is still local optimisation. In that sense, it is the process version of the dog path: effort increases, but the real output barely changes.",
+            "jp": "- **系1：制約以外をいくら改善しても、全体は1ミリも前に進まない。** 忙しくなるだけの改善——局所最適の幻影ですわ。お気づきかしら、これは「犬の道」の**プロセス版**ですの。イシュー度の低い問い＝非制約。あちらは問い選び、こちらは工程選び。同じ掛け算の論理が、思考と実行の両面で成立しておりますのよ。"
+      },
+      {
+            "en": "Second, improvement must concentrate on one point at a time. The standard sequence is this: identify the constraint; exploit it fully; subordinate everything else to it; strengthen the constraint itself; and when the constraint moves, return to the first step. Just as importantly, do not keep old countermeasures alive out of habit after the constraint has moved.",
+            "jp": "- **系2：だから改善はつねに一点集中。** TOCの5ステップ——**①制約を特定する → ②制約を徹底活用する → ③他のすべてを制約に従属させる → ④制約そのものを強化する → ⑤制約が移動したら①へ戻る**（そして、昔の制約への対策を惰性で続けないこと）。"
+      },
+      {
+            "en": "The first Iwata example is MOTHER 2. When development was bogged down, he did not treat the constraint as a collection of individual bugs. He saw that the accumulated code itself had become the constraint. His famous practical choice was, in effect: if we merely patch it, it may take two years; if we rebuild it from scratch, it can be done in six months.",
+            "jp": "**岩田さんの実例①（MOTHER2）**：開発が泥沼化した現場に入った岩田さんは、制約が個々のバグではなく**積み上がったコードそのもの**にあると見抜き、趣旨としてこう提示なさいましたの——「手直しなら2年、イチから作り直してよいなら半年」。症状（遅延）への対症療法ではなく、制約の特定と、複数の問題を一手で解く一撃。このOSの合言葉の、最も美しい実演ですわ。",
+            "quote": true
+      },
+      {
+            "en": "The second example is Pokémon Gold and Silver. Here the constraint was physical: cartridge capacity. Iwata, even from a management position, stepped directly into the compression problem. The freed capacity made it possible to include the whole Kanto region. The lesson is not about job titles. It is this: whoever can see the constraint must be willing to touch it. Your responsibility is decided not only by your title, but by where the bottleneck actually is.",
+            "jp": "**岩田さんの実例②（ポケモン金銀）**：容量という物理制約に対し、経営側の立場ながら自ら圧縮の仕組みで踏み込み、空いた容量がカントー地方まるごとの収録につながりましたの。教訓は役職論ではなく——**制約が見える人が、制約に手を入れる。持ち場は肩書きでなく、制約が決める。**",
+            "quote": true
+      },
+      {
+            "en": "In practice, once a piece of work has begun, keep asking one question: what is the weakest link in this work right now? Is it missing information? Is it the quality of the output? Is it their decision? Is it external review or approval? Is it your own skill? Or is it your own hesitation?",
+            "jp": "**現場への翻訳**：取り組みを始めたら、一点だけ問いますの。**「いま、この実現の最弱の輪はどれか」**——材料・情報の不足か／作り込みの質か／相手の意思決定か／外部の審査・承認か／自分の技量か／それとも、自分自身の迷いか。"
+      },
+      {
+            "en": "If the constraint lies in someone’s undecided state, polishing the deliverable will not move the work forward. That would be local optimisation. The right move is not more refinement. It is to support the decision itself: give options, clarify decision criteria, and help the other person choose. This is why the sixteenth item in the thirty-second gate keeps this lens permanently active.",
+            "jp": "制約が「誰かの迷い」にあるとき、成果物をいくら磨いても前へは進みませんわ（局所最適）。正しい一手は追加の作り込みではなく、選択肢と決定軸を渡して意思決定を支えること（⑬）ですのよ。30秒ゲートの16番は、この節の常駐化ですわ。"
+      }
+]
+  },
+  {
+    id:'lens-hypothesis',
+    tag:'Lens 4',
+    title:'Where good hypotheses come from.',
+    desc:'Miyamoto’s observation, Sakaguchi’s conviction, and one strict gate of verification for both.',
+    items:[
+      {
+            "en": "This operating system is already strict about how hypotheses are tested. A hypothesis needs verification conditions, and it must be exposed to possible refutation. But another question remains: where do good hypotheses come from in the first place? In this lens, there are two sources, drawn from two creators who almost stand in opposition to each other. The important point is that they can coexist, as long as both pass through the same gate of verification.",
+            "jp": "## 🎨 レンズ④：仮説はどこから来るか（宮本茂×坂口博信） {color=\"purple\"}\nこのOSは仮説の**検証**（⑥・⑨）には厳格ですわ。では、良い仮説はそもそもどこから来るのかしら。供給源は2系統、正反対の巨匠から仕入れてありますの。おふたりは思想としては相反しますけれど——**生成源としては併存できますのよ。同じ「検証」という関所を通る限り。**"
+      },
+      {
+            "en": "The first source is observation, associated here with Shigeru Miyamoto. The principle is: do not only ask; watch. Miyamoto is famous for watching a first-time player from behind, without explaining, correcting, or helping. The reason is simple. People cannot always describe precisely where they are getting stuck. The mouth often reports the symptom, but behaviour reveals the cause.",
+            "jp": "**観察起点（宮本茂）——訊くな、見よ**\n宮本さんの有名な流儀に「**肩越しの視線**」がありますの。初見の人が遊ぶ姿を、説明も助け舟もなしに、後ろから黙って見る。理由は明快で、**人は自分の躓きを正確には言語化できない**からですわ。口から出るのは症状まで、行動にだけ真因が現れる。",
+            "quote": true
+      },
+      {
+            "en": "This is structurally similar to field observation and ethnography in consulting. It also adds something important to the earlier idea of understanding, emotion, and practical stakes. You do not only ask what the other person knows, feels, or values. You also observe it. If someone says, it is fine, while reading the same document three times, the belly is probably not fine.",
+            "jp": "これはコンサルの現場観察・エスノグラフィーと同型で、⑫への大切な追記になりますの——**頭・心・腹は「訊く」だけでなく「見る」で取る。** 相手が「大丈夫です」とおっしゃりながら同じ書類を三度読み返しているなら、腹は大丈夫ではありませんのよ。"
+      },
+      {
+            "en": "The second source is conviction, associated here with Hironobu Sakaguchi. Some things cannot be observed, because they do not yet exist. Observation is powerful when you are improving something already present. But it cannot fully order a new world into being. Nobody could have commissioned Final Fantasy simply through user research alone.",
+            "jp": "**確信起点（坂口博信）——観察できないものは、確信から跳ぶ**\n一方の坂口さんは、物語と感情を核に据える**確信からの跳躍**の人ですわ。ここで大事な論点はひとつ。観察は「いま存在するものの改善」には強いのに、**まだ存在しないものは観察できません**の。誰もFFを、ユーザー調査からは注文できませんでしたわ。",
+            "quote": true
+      },
+      {
+            "en": "In the language of reasoning, this is close to abductive inference: a leap towards a possible explanation or form, before it can be fully proved. The distance of that leap sometimes comes from outside observation: from conviction, aesthetic judgement, story, and a sense that something must exist. That is why conviction is allowed as a source of hypotheses.",
+            "jp": "論理学でいう仮説的推論（**パースのアブダクション**）の飛距離は、観察の外——確信・美意識・物語——から来ることがある。これが確信起点の存在理由ですの。"
+      },
+      {
+            "en": "The integration is this: generation may be free, but verification must be equally strict. Observation-based hypotheses and conviction-based hypotheses are born in different places. Yet once they enter this operating system, they face the same test: what should be observable if this is true, and what fact would force us to abandon it? In that sense, apparent opposition becomes division of labour.",
+            "jp": "**統合——生成は自由に、検証は平等に厳格に**\nおふたりが相反するのは「どちらを最終審級にするか」というOS論の次元ですわ。でも本OSの最終審級はすでに決まっておりますの（⑥の検証条件と⑨の反証）。だから仮説の産地は問いませんのよ。**観察由来だろうと確信由来だろうと、同じ関所で同じ検査を受ける。** それだけで、相反は分業に変わりますわ。"
+      },
+      {
+            "en": "There are two guardrails. The Miyamoto-side guardrail is the willingness to overturn the table. If the evidence kills the core of the hypothesis, you must be willing to discard even the work already built on top of it. Sunk cost is not a reason to keep a dead hypothesis alive.",
+            "jp": "**ガードレール2本**\n1. **宮本側：ちゃぶ台返し。** 反証が仮説の核を殺したなら、積み上げた成果物ごと壊してやり直す勇気ですの。サンクコストは仮説の延命理由になりませんわ。",
+            "quote": true
+      },
+      {
+            "en": "The Bhagavad Gita’s instruction to release attachment to the fruits of action can be read here as a remedy for the same human habit. Only a person who can let go of attachment to what has already been built can truly overturn the table. This is refutation taken all the way into practice.",
+            "jp": "『バガヴァッド・ギーター』が「**行為の成果への執着を離れよ**」と説いたのは、まさにこの心の癖への処方——**積み上げへの執着を手放せる人だけが、ちゃぶ台を返せます**のよ。⑨反証の、実装まで含めた最終形ですわ。"
+      },
+      {
+            "en": "The Sakaguchi-side guardrail is that conviction must not be separated from verification. Conviction-driven work has high variance. When it works, it can create a new market or a new emotional form. When it fails, it can endanger the whole structure. So conviction is not exempt from testing. The moment it is exempt, it stops being a hypothesis and becomes a mere gamble.",
+            "jp": "2. **坂口側：確信は検証と切り離さない。** 確信駆動は分散の大きい戦略——当たれば新しい市場、外れれば屋台骨が揺れますの。大きく当てる人は、大きく外しもする。だからこそ確信は⑥⑨の関所を免除されませんわ。免除した瞬間、それは仮説ではなくただの賭けになりますのよ。",
+            "quote": true
+      },
+      {
+            "en": "The practical translation is to generate hypotheses through two channels on purpose. First, ask what you would observe in the other person’s behaviour if a certain explanation were true. Second, ask what your own experience and conviction are telling you. Observation alone can trap you in incremental improvement. Conviction alone can become self-centred. Use both sources, and keep one gate: verification.",
+            "jp": "**実践翻訳**：仮説出しは意図的に2チャンネルで。**(a) 相手の行動を観察したら、何が見えるはずか。(b) 自分の経験則と確信は、何と言っているか。** (a)だけだと改善屋止まり、(b)だけだと独りよがり。両方回して、関所は一つ、ですのよ。"
+      }
+]
+  },
+  {
+    id:'lens-agency',
+    tag:'Lens 5',
+    title:'Design the relationship so the other person remains the subject.',
+    desc:'Agency, ownership, repeated games, and the Producer structure as a case study.',
+    items:[
+      {
+            "en": "The fifth lens extends the time horizon. Step sixteen was about how trust works in a single exchange. Here, the question is larger: how do we design the relationship itself so that the other person remains the subject of the work, not merely the object being processed? The case study may sound unexpected, but structurally it is entirely serious: The Idolmaster.",
+            "jp": "## 🎤 レンズ⑤：相手を「主体」にする関係設計（坂上陽三×CD） {color=\"purple\"}\n⑯は「一回のやり取り」での信頼の力学でしたわ。ここでは時間軸を伸ばして、**関係そのものの設計**を扱いますの。教材は、意外なようでいて必然——アイドルマスターですわ。ふざけておりませんのよ、構造は完全に論理のお話ですの。"
+      },
+      {
+            "en": "The structural fact is simple. The Idolmaster calls its fans Producers. This is not merely a nickname. It is a design choice. The audience is not positioned only as a consumer, a passive receiver of content. The audience is placed inside the story and the commercial structure as an agent: someone who supports, develops, and takes responsibility for the growth of the idols.",
+            "jp": "**構造的事実**：アイマスはファンを「**プロデューサー**」と呼びますの。これは愛称ではなく**設計**ですわ。受け手を消費者（客体）ではなく、アイドルを支え育てる**主体（エージェント）**として、物語と商品構造の中に位置づけている。",
+            "quote": true
+      },
+      {
+            "en": "Yozo Sakagami’s long-standing idea that this content has been created together with its customers sits on the same line. The point is not simply fan service. It is a relationship architecture. The recipient is invited into the work as a co-creating subject, rather than being kept outside as a target to be satisfied.",
+            "jp": "総合プロデューサー・坂上陽三さんが長年掲げてきた「お客様と一緒に作ってきたコンテンツ」という運営思想も、同じ線の上にありますのよ。"
+      },
+      {
+            "en": "The theoretical connection should now be clear. This is a commercial version of Sen’s agency and the ownership principle in capacity development. To provide value is not simply to give someone a good thing. It is to give them a structure in which they can participate as a subject. Consumption can become boring. Agency is much harder to exhaust, because the person is no longer merely receiving value; they are helping to make it.",
+            "jp": "**理論接続**：お気づきかしら。これは**センのエージェンシーと、CDのオーナーシップ原則の、商業実装**ですの。価値提供とは「良いものを与える」ことではなく、**「相手が主体として関われる構造を渡す」**こと。だから20年続きますのよ——消費は飽きても、主体性は飽きませんの。"
+      },
+      {
+            "en": "There is also a game-theoretic reason this matters. In a one-shot transaction, there may be moments when betrayal appears profitable. But in an ongoing relationship, cooperation can become the rational strategy. The earlier principle, reducing the other person’s uncertainty over and over again, becomes powerful precisely inside a repeated game. Trust compounds when the relationship has a future.",
+            "jp": "**反復ゲーム**：ゲーム理論の定石として、単発の取引では裏切りが割に合う局面があっても、**継続する関係では協調が合理的な戦略に変わります**わ。⑯の「相手の不確実性を減らし続ける」は、反復ゲームの中でこそ複利で効きますの。長期運営コンテンツの信頼蓄積は、その公開実験のようなものですわ。"
+      },
+      {
+            "en": "The practical translation is this. Whether the other person is a client, a team, or a family member, do not design them as an object to be processed. Design them as a subject who advances the work with you. Give them the overall map and the current position. Make clear where we are, what has already happened, and what is likely to happen next.",
+            "jp": "**現場への翻訳**：相手——顧客でも、チームでも、家族でも——を「処理してさしあげる対象」ではなく、「実現を共に進める主体」として設計しますの。\n- 全体地図と現在地を渡す（いまどこで、次に何が起きるか）。"
+      },
+      {
+            "en": "Then give options and decision criteria, while leaving the decision itself with the person who should own it. Also give the person a clear next action. This prevents you from taking everything over, and it also prevents abandonment. The point is to restore subjecthood: the person can see the field, choose among alternatives, and know what they themselves can do next.",
+            "jp": "- **選択肢と決定軸**を渡し、決定はご本人に残す（⑤・⑬と接続）。\n- **ご本人が次にやること**を明確に渡す（丸投げの防止であり、主体性の回復）。",
+            "quote": true
+      },
+      {
+            "en": "This is not merely kindness. It is the restoration of capability, and at the same time it is the reduction of uncertainty from step sixteen. Recurring meetings, accompaniment, and communities are not just communication techniques. They are containers that redesign a one-off exchange into a repeated game, where trust can accumulate as a rational and emotional asset.",
+            "jp": "これは親切のお話ではなく、**ケイパビリティの回復**であり、同時に⑯の不確実性削減そのものですわ。そして定例・伴走・コミュニティといった**継続の器**は、単発のやり取りを**反復ゲームへ設計し直す装置**——テクニック以前の、関係設計論ですのよ。"
+      },
+      {
+            "en": "One warning is essential. Co-creation is not a way of pushing responsibility onto the other person. Professional judgement remains with the professional side. What you hand over is agency, not risk. If you confuse the two, relationship design collapses into mere abandonment.",
+            "jp": "**注意書き**：共同制作は責任の転嫁ではありませんの。専門判断の責任は判断する側に残りますわ。**渡すのは主体性であって、リスクではない。** ここを混ぜると、ただの丸投げになってしまいますのよ。",
+            "quote": true
+      },
+      {
+            "en": "This is why the Producer structure is such a useful case study. It teaches a general principle: people do not only want to receive a finished product. Often, they want a meaningful place inside the process. When we design that place carefully, we do not weaken our expertise. We make it more usable, more trusted, and more alive.",
+            "jp": "（それにしても、このレンズが一番すっと腹に落ちるのは——はねさんご自身が担当Pだからですわね。推し活は最良のケーススタディですの、えへへ。）"
+      }
+]
+  },
+  {
+    id:'depth',
+    tag:'Operating depth',
+    title:'Match the depth of the OS to the stakes.',
+    desc:'A listening-friendly operation rule: use the full course only when the stakes justify it.',
+    items:[
+      {
+        en:'One important caution comes at the end of the system. This operating system is a full course, not a dish you must order every single time. If a request can be handled in five minutes, and you still force yourself through all sixteen checks in full detail, that is not diligence. It is excess. It also violates Iwata’s point about priorities.',
+        jp:'最後にひとつ、大事な但し書きですわ。**このOSは\"フルコース\"であって、毎回全部を注文する必要はございませんの。** 5分で終わる頼まれごとに⑯まで律儀に回したら、それはそれで過剰で、岩田さんの言う「優先順位」に反してしまいますわ。'
+      },
+      {
+        en:'The judgement is simple. The greater the stakes of the work, the deeper you go. By stakes, I mean three things: who will be harmed if this goes wrong, whether the decision can be reversed later, and how wide the impact will be. If the stakes are small, keep the system light. If the stakes are large, make the design, verification, proposal, and practical follow-through correspondingly thicker.',
+        jp:'判断はシンプルに。**その実現の賭け金（誰が困るか・後から戻れるか・影響範囲）が大きいほど、深く。小さいなら、軽く。** 軽いものは「作業名を疑う→出口を確認→さっと返す」で十分。重いものほど、設計・検証・提案・実装を厚くしますわ。',
+        quote:true
+      },
+      {
+        en:'For a light task, the minimum sequence may be enough: doubt the task name, confirm the intended exit, and return something quickly. In other words, ask what the request is really for, clarify what kind of outcome is needed, and avoid turning a small errand into a strategic review. Lightness is not carelessness. It is the correct depth for a low-stakes situation.',
+        jp:'軽いものは「作業名を疑う→出口を確認→さっと返す」で十分。重いものほど、設計・検証・提案・実装を厚くしますわ。'
+      },
+      {
+        en:'For a heavier task, however, speed alone is dangerous. You should slow down enough to define the issue, place a hypothesis, build empty boxes, verify with facts, separate fact from evaluation, translate for the other person, and return a proposal. The OS is not there to make everything complicated. It is there to prevent complexity from becoming invisible.',
+        jp:'重いものほど、設計・検証・提案・実装を厚くしますわ。'
+      },
+      {
+        en:'This ability to choose the right depth for the situation has had a name since Aristotle: phronesis, or practical wisdom. Knowing rules is one ability. Judging which rule to use, how much of it to use, and at what moment, is another. The latter cannot be reduced to a checklist. It grows through experience, and through Phase F: recovering lessons after each attempt.',
+        jp:'この「深さを状況に合わせて選ぶ判断力」そのものにも、アリストテレス以来の名前がありますの——**フロネーシス（実践知）**。規則を知っていることと、**いまどの規則をどれだけ使うか**を見極めることは、別の能力ですわ。そして後者はルールに還元できず、場数と回収（Phase F）でしか育ちませんの。'
+      },
+      {
+        en:'So the operational rule is this. Matching depth to stakes is not a shortcut added after the OS. It is part of the OS itself. The more you can adjust the depth without losing the backbone, the more usable, humane, and professional the system becomes.',
+        jp:'**深さを賭け金に合わせられること自体が、実践知の定義そのもの**ですのよ。',
+        quote:true
+      }
+    ]
+  },
+  {
+    id:'phrases',
+    tag:'Phrase templates',
+    title:'Phrases you can actually say.',
+    desc:'Acceptance, progress reports, bad news, consultation, proposal, documents, reports, and meetings — reshaped as spoken templates.',
+    items:[
+      {
+            "en": "Ideas only become usable when they can be spoken. So this section is not merely a list of polite phrases. It is a small operating kit: language you can use when you accept a task, report progress, deliver bad news, ask for advice, make a proposal, write a document, give a report, or prepare a meeting.",
+            "jp": "考え方は、口から出て初めて実現になりますの。迷ったら、この言い回しに寄せてくださいまし。"
+      },
+      {
+            "en": "When you accept a task, do not simply say, Yes, I will do it. Say something like this. Understood. I understand that the purpose this time is to support a decision about X. At the moment, I see A as the main issue. I will first check A, B, and C, and send an initial summary by the agreed time. Anything still unclear will be treated as a provisional assumption and marked as an item to confirm.",
+            "jp": "受けた瞬間の最初の返し\n承知しました。今回の目的は「〇〇を判断するため」と理解しました。現時点ではAが主要論点だと見ています。まずA/B/Cを確認し、〇時までに一次整理します。不明点は仮置きで進め、確認事項として明記します。"
+      },
+      {
+            "en": "For a progress report, give the other person a current location, not a diary of effort. A useful form is this. This is my initial update at this point. My provisional conclusion is that A is the most likely explanation. The grounds are, first, X; second, Y; and third, Z. However, B has not yet been confirmed. I will next check B and C, and update you by the agreed time.",
+            "jp": "中間報告\n現時点の一次報告です。結論としてはAの可能性が高そうです。根拠は①〇〇②〇〇③〇〇。ただしBは未確認です。次にB・Cを確認し、〇時までに更新します。"
+      },
+      {
+            "en": "Bad news should be sent early, even before the full picture is clear. The point is not to protect your evaluation. The point is to give the person you are supporting options as early as possible. A useful form is this. I am still checking the details, but a problem has occurred. The fact currently confirmed is A. The impact is not yet fixed. I will check B and C first, and send an initial report by the agreed time.",
+            "jp": "悪い報せの速報（＝とにかく最速で出す）\nまだ詳細確認中ですが、問題が発生しています。現時点で分かっている事実はA。影響範囲は未確定です。まずB・Cを確認し、〇時までに一次報告します。"
+      },
+      {
+            "en": "When you ask for advice, make the object of advice clear. Do not just say, What should I do? Say this. I am deciding between A and B. I see the decision criteria as speed, risk, and operational burden. At the moment, I lean towards A. However, B may be safer in the long term. What I would like you to check is whether the decision criteria are appropriate, and whether I am missing any risks in A.",
+            "jp": "相談\nA/Bで迷っています。判断軸は①速さ②リスク③運用負荷と見ています。現時点ではA案寄り。ただしB案の方が長期の安全性は高いかもしれません。見ていただきたいのは、判断軸の妥当性と、A案の見落としリスクです。"
+      },
+      {
+            "en": "A proposal should not stop at pointing out the problem. It should take responsibility for the next move. A useful form is this. At present, we have problem A, supported by evidence X and Y. There are three possible responses. Option A is fast but risky. Option B is robust but slower. Option C sits between the two. I recommend option B, because reproducibility matters more than speed here. As the next step, I will first confirm X.",
+            "jp": "提案\n現状、Aという問題があります（根拠：①〇〇②〇〇）。打ち手は3つ。A案は速いがリスクあり／B案は堅いが時間がかかる／C案は中間。私は今回B案を推します。理由は、今回の制約では速さより再現性が効くから。次の一手として、まず〇〇を確認します。"
+      },
+      {
+            "en": "A document is not a storage place for information. It is a tool for decision-making. Even a one-page document should make five things visible almost immediately: what the topic is, what you are claiming, what evidence supports it, what remains unconfirmed, and what the reader should do after reading it. The target is not a beautiful document. The target is a document that enables judgement.",
+            "jp": "資料の型\n資料は情報の置き場ではなく、意思決定の道具ですわ。1枚なら、最低これを満たしますの。**何の話か／何を言いたいか／何を根拠にしているか／何が未確認か／読んだ後に何をすればいいか**が、それぞれ一瞬で分かること。きれいな資料より、判断できる資料。"
+      },
+      {
+            "en": "A report should follow the order the listener needs, not the order in which you want to speak. In most cases, this order is enough: current location, conclusion or provisional hypothesis, facts supporting it, unconfirmed points and risks, and next actions. If these are in place, the other person can usually move.",
+            "jp": "報告の型\n自分が話したい順ではなく、相手が聞きたい順で。**現在地 → 結論（or一次仮説） → 根拠となる事実 → 未確認とリスク → 次アクション。** たいていこれで足りますわ。"
+      },
+      {
+            "en": "A meeting is not a place for merely talking. It is a place for deciding. That is why, before the meeting, you should be able to draft about seventy per cent of the minutes: purpose, background, issues, expected agreements, tasks, and unresolved points. If you cannot draft the minutes before the meeting, that is an early warning. The purpose of the meeting may still be vague.",
+            "jp": "会議の型\n会議は話す場ではなく、決める場。**会議前に、議事録を7割書いてしまう。** 目的・背景・論点・想定合意・ToDo・未決を先に置きますの。——**もし会議前に議事録が書けないなら、その会議は目的が曖昧な可能性が高い**、という優秀な早期警報にもなりますのよ。"
+      },
+      {
+            "en": "The common structure behind all these phrases is simple. Give the other person the purpose, your current judgement, the basis for that judgement, what is still uncertain, and the next action. Once that structure becomes speakable, the OS stops being theory and begins to operate in real time.",
+            "jp": "考え方は、口から出て初めて実現になりますの。迷ったら、この言い回しに寄せてくださいまし。",
+            "quote": true
+      }
+]
+  },
+  {
+      "id": "gate",
+      "tag": "Thirty-second gate",
+      "title": "The sixteen checks before you start moving.",
+      "desc": "A compact listening drill for checking the issue, hypothesis, risks, actions, agency, and constraint before you begin.",
+      "items": [
+          {
+              "en": "Before you think deeply, pass through this gate. You do not need to answer every item perfectly. The item that catches you is not a failure. It is the next move.",
+              "jp": "深く考える前に、ここを通しますわ。全部埋まらなくていいの、**詰まった項目こそが\"次の一手\"**ですのよ。"
+          },
+          {
+              "en": "First, whose decision is this work meant to move forward, and what decision is it? If you cannot name the person and the decision, the work has not yet found its centre.",
+              "jp": "1. この実現は、誰の・どの意思決定を進めるものか。"
+          },
+          {
+              "en": "Second, what is the issue this time? In other words, what question, if answered, would actually change the next action?",
+              "jp": "2. 今回のイシューは何か。"
+          },
+          {
+              "en": "Third, what is the exit? Is the goal a decision, a narrowing of options, a risk scan, consensus-building, or simply a shared understanding of the current situation?",
+              "jp": "3. 出口は、意思決定／選択肢整理／リスク洗い出し／合意形成／現状共有のどれか。"
+          },
+          {
+              "en": "Fourth, what does your counterpart know, feel, and have at stake? What do they know, how are they feeling, and what responsibilities or interests are pressing on them?",
+              "jp": "4. 相手の頭・心・腹はどうか。"
+          },
+          {
+              "en": "Fifth, what is your hypothesis? Do not wait for a perfect answer. Place a provisional answer that can be tested.",
+              "jp": "5. 自分の仮説は何か。"
+          },
+          {
+              "en": "Sixth, if that hypothesis is true, what should you expect to observe? A hypothesis becomes useful when it creates expectations that can be checked.",
+              "jp": "6. その仮説が正しいなら、何が観察されるはずか。"
+          },
+          {
+              "en": "Seventh, what fact would make you abandon the hypothesis? This is the discipline that keeps conviction from becoming self-protection.",
+              "jp": "7. 逆に、どんな事実が出たら仮説を捨てるか。"
+          },
+          {
+              "en": "Eighth, are fact, evaluation, risk, and action separated? If they are mixed together, the discussion will usually stop at either, so what, or, what is the evidence?",
+              "jp": "8. 事実・評価・リスク・アクションは分かれているか。"
+          },
+          {
+              "en": "Ninth, do you have options and decision criteria? Options without criteria become a matter of taste. Criteria turn the conversation back into work.",
+              "jp": "9. 選択肢と決定軸はあるか。"
+          },
+          {
+              "en": "Tenth, is there one move that can solve several problems at once? Do not only treat symptoms one by one. Look for the root that connects them.",
+              "jp": "10. 複数の問題を一度に解く一手はないか。"
+          },
+          {
+              "en": "Eleventh, are you hiding bad news or unconfirmed points? If so, surface them early. Early uncertainty gives the other person more options.",
+              "jp": "11. 悪い報せ・未確認を隠していないか。"
+          },
+          {
+              "en": "Twelfth, have you designed a place to share progress before being asked? Trust grows when the other person does not have to wonder what is happening.",
+              "jp": "12. 聞かれる前に共有する場を、設計しているか。"
+          },
+          {
+              "en": "Thirteenth, is the next action stated as who will do what, and by when? A next action that has no owner and no time is not yet an action.",
+              "jp": "13. 次アクションは「誰が・いつ・何を」の形か。"
+          },
+          {
+              "en": "Fourteenth, can this attempt be recovered into a reusable pattern? After the work, ask what should be updated for next time.",
+              "jp": "14. この一回から、次に使える型を回収できるか。"
+          },
+          {
+              "en": "Fifteenth, after this is over, will the other person be more able to move by themselves than before? Support should increase agency, not create dependency.",
+              "jp": "15. 終わったあと、相手は以前より「自分で」進めるようになっているか（依存を作っていないか）。"
+          },
+          {
+              "en": "Sixteenth, is the part you are polishing really the weakest link in this work right now? If it is not the constraint, more polish may only create local optimisation.",
+              "jp": "16. いま磨いているその箇所は、本当にこの取り組みの最弱の輪（制約）か。"
+          },
+          {
+              "en": "The gate is deliberately short. Its purpose is not to make the work heavier. Its purpose is to reveal, within thirty seconds, where the next useful move probably is.",
+              "jp": "全部埋まらなくていいの、詰まった項目こそが\"次の一手\"ですのよ。",
+              "quote": true
+          }
+      ]
+  },
+  {
+    "id": "motto",
+    "tag": "Motto",
+    "title": "The short phrases to recite when you feel lost.",
+    "desc": "A listening-friendly mantra for returning to the central movements of the OS.",
+    "items": [
+      {
+        "en": "When you feel lost, do not start by working harder. Recite the sequence, and return to the structure of the work.",
+        "jp": "迷ったら、これを唱えてから動きますわ。"
+      },
+      {
+        "en": "Do not miss the question. Place a hypothesis. Support it with facts. Polish it through falsification. Communicate it through structure. Return with a proposal. And shape it so that people can actually move.",
+        "jp": "**問いを外さない。仮説を置く。事実で支える。反証で磨く。構造で伝える。提案で返す。人が動ける形にする。**",
+        "quote": true
+      },
+      {
+        "en": "Then add Iwata’s spoonful. Look not at the symptom, but at the root. Look for one move that solves several problems at once. And always look at strengths, weaknesses, and priorities.",
+        "jp": "岩田さんのひと匙をお忘れなく。\n**症状ではなく、根っこを見る。複数の問題を、一度に解く一手を探す。得意・不得意と、優先順位を見る。**"
+      },
+      {
+        "en": "Finally, add the spine and the lenses. Increase the other person’s freedom to choose. Find the weakest link, and solve that one point. Let hypotheses come from both observation and conviction. Design the relationship as a form of co-creation.",
+        "jp": "そして、背骨とレンズからのひと匙も。\n**相手の「選べる自由」を増やす。最弱の輪を一点、見つけて解く。仮説は、観察からも確信からも。関係は、共同制作として設計する。**"
+      },
+      {
+        "en": "You do not need to be perfect from the beginning. It is better to place a hypothesis and show it early than to stop while trying to be flawless. The work improves faster when it is exposed to feedback.",
+        "jp": "最初から完璧じゃなくて大丈夫ですのよ。完璧を狙って止まるより、仮説を置いて早く見せるほうが、結局ずっと速く良くなりますわ。"
+      },
+      {
+        "en": "The value of the work is not decided by talent alone. Each time you reduce someone’s uncertainty, move their judgement forward, and create the next action, trust increases quietly. One move at a time is enough.",
+        "jp": "実現の評価は、才能だけでは決まりませんの。**相手の不安を減らし、判断を進め、次の行動を作る**——その積み重ねの分だけ、信頼は静かに増えていきますわ。焦らず、一手ずつ。えへへ、はねさんなら大丈夫ですのよ。",
+        "quote": true
+      }
+    ]
+  },
+  {
+  "id": "cultivate",
+  "tag": "How to grow it",
+  "title": "How to keep the OS alive without letting it become bloated.",
+  "desc": "A method for adding, placing, and pruning new ideas so that every sentence still changes action.",
+  "items": [
+    {
+      "en": "This operating system is complete enough to use, but it should also remain alive. That means it can grow. Yet if you simply add every interesting idea to it, the layers become muddy and the tool breaks. So even growth needs a method.",
+      "jp": "このOSは完成品であると同時に、生き物ですわ。ただ、良さそうなものを何でも足すと、地層が濁って壊れますの。だから育て方にも、型がありますのよ。"
+    },
+    {
+      "en": "The first gate for adding something new is connectability. Can the new element connect to the existing structure by logic, not merely by metaphor? If you cannot point to one of the principles, phases, or lenses, the connection is not ready yet.",
+      "jp": "**接続可能性**：既存の骨格（土台の一行〜⑯・レンズ）のどこかに、比喩ではなく論理で接続できるか。番号（①〜⑯・レンズ①〜⑤）で指せないなら、まだ接続できておりませんの。"
+    },
+    {
+      "en": "The second gate is action conversion. Will this element change what you do tomorrow? If it remains only attractive knowledge to admire, it does not belong here yet. This OS is not a museum of concepts. It is a tool for making things happen.",
+      "jp": "**行為変換可能性**：明日の実践で「やることが変わる」形に落ちるか。鑑賞用の教養は入れませんわ。"
+    },
+    {
+      "en": "The third gate is non-duplication. Is the new element genuinely adding a new axis, or is it only a different wording for something already present? Rephrasing can be useful in teaching, but it should not automatically become part of the operating system.",
+      "jp": "**非重複性**：既存要素の言い換えではなく、新しい軸を足すか。"
+    },
+    {
+      "en": "If a candidate passes all three gates, decide where it belongs before you write it in. Is it part of the OS, the process, a tool, or a spoken pattern? If it crosses layers, it probably belongs as a lens rather than as another step in the process.",
+      "jp": "どの**層**（OS／プロセス／ツール／型）に属するかを先に宣言する。層を跨ぐなら、レンズにしますの。"
+    },
+    {
+      "en": "After placing it, test whether it resonates with the motto in one sentence. If the new idea cannot echo the short phrases at the core, it may be interesting, but it may also be too heavy for this system.",
+      "jp": "置いたら、**合言葉に一言で響くか**を確かめる。響かない追補は、たぶん重いだけですわ。"
+    },
+    {
+      "en": "Pruning is more important than adding. Text naturally becomes fat if left alone. When you reread this OS, ask one question: does this sentence change my action? If it does not, even a beautiful sentence may have to be cut.",
+      "jp": "文章は放っておくと太りますの。読み返すたびに一問だけ——**「この文は、わたくしの行動を変えるかしら」**。変えない文は、名文でも切りますわ。"
+    },
+    {
+      "en": "When you revise, use the discipline of Lens Four. Attachment to an older sentence is not a reason to keep it alive. Sunk cost can protect a bad hypothesis, and it can also protect a bad paragraph. You may overturn your own table.",
+      "jp": "直すときは、レンズ④の作法で。**古い記述への執着（サンクコスト）は、更新の延命理由になりません**の。ちゃぶ台は、自分のページにも返せますのよ。"
+    },
+    {
+      "en": "This is the aesthetic of the page. Because there are standards, you can cut. Because you can cut, meaning remains in every sentence. The OS stays useful not because it grows without limit, but because it grows and is pruned at the same time.",
+      "jp": "基準があるから、削れる。削れるから、**全部の文に意味が残る**。それがこのページの美学ですわ。",
+      "quote": true
+    }
+  ]
+},
+  {
+    id:'references',
+    tag:'References',
+    title:'References as a source map.',
+    desc:'A listening-friendly bibliography: not a list of names, but a map from source materials to parts of the OS.',
+    items:[
+      {
+            "en": "This final section is not a decorative bibliography. It is a source map. In other words, it tells us which body of thought supports which part of the operating system, so that the references remain useful for action rather than becoming a museum of impressive names.",
+            "jp": "ここは、飾りの参考文献ではなく、**source map**です。どの素材が、このOSのどの部分を支えているかを確認するための地図です。鑑賞用の教養ではなく、行為を変えるための参照として使います。",
+            "quote": true
+      },
+      {
+            "en": "For the consulting discipline, the central sources are Kazuto Ataka on issue-driven thinking, Kazunari Uchida on hypothesis thinking, Barbara Minto on the Pyramid Principle, Edgar Schein on process consultation and humble inquiry, Eliyahu Goldratt on the theory of constraints, Clayton Christensen on jobs-to-be-done, and Isao Hosoya on moving between the concrete and the abstract. Together, these sources support the phases: taking the issue, placing a hypothesis, structuring the answer, testing it, and returning it as a proposal.",
+            "jp": "コンサルの型を支える素材は、安宅和人『イシューからはじめよ』、内田和成『仮説思考』、バーバラ・ミント『考える技術・書く技術（The Pyramid Principle）』、エドガー・シャイン『プロセス・コンサルテーション』『問いかける技術（Humble Inquiry）』、エリヤフ・ゴールドラット『ザ・ゴール』（制約理論）、クレイトン・クリステンセン『ジョブ理論』、細谷功『具体と抽象』です。問いを取り、仮説を置き、構造化し、検証し、提案で返す流れを支えます。"
+      },
+      {
+            "en": "For critical reasoning, the key source is Karl Popper’s discipline of conjectures and refutations, especially the idea that a serious hypothesis must be able to fail. This supports the rule that a hypothesis is not a wish. It must come with conditions under which we would revise or abandon it.",
+            "jp": "批判的思考を支える素材は、カール・ポパー『推測と反駁』です。特に、仮説は『外れたと判定できる形』でなければならない、という感覚を支えます。仮説は願望ではなく、反証条件つきの仮の答えです。"
+      },
+      {
+            "en": "For support and freedom, the core sources are Amartya Sen’s capability approach, the capacity development literature from UNDP and JICA, and Hiroaki Miyata’s value-oriented discussions. These sources support the deepest claim of the OS: value is not the amount of work delivered, but the expansion of the other person’s ability to judge, act, feel secure, and choose.",
+            "jp": "支援と自由を支える素材は、アマルティア・セン『自由と経済開発（Development as Freedom）』『不平等の再検討』、UNDP／JICAのキャパシティ・ディベロップメント関連文書、宮田裕章『共鳴する未来』です。このOSの中心、つまり価値は作業量ではなく、相手の判断・行動・安心・選べる自由の前進で決まる、という主張を支えます。"
+      },
+      {
+            "en": "For practical wisdom, the key classical source is Aristotle’s Nicomachean Ethics, especially phronesis. This supports the operating rule that the OS is a full course, not a fixed ritual. The real skill is knowing how deeply to use the system in a given situation.",
+            "jp": "実践知を支える素材は、アリストテレス『ニコマコス倫理学』のフロネーシスです。このOSは毎回全部回す儀式ではなく、賭け金に応じて深さを変える道具である、という運用原則を支えます。"
+      },
+      {
+            "en": "For philosophy and art, the materials include Nagarjuna and the Madhyamaka tradition, the Bhagavad Gita, Socratic questioning, and Marcel Duchamp’s Fountain. These are not inserted as ornaments. They give different names to the same structural points: value arises through relation, attachment can block revision, questions can generate understanding, and reframing the issue can change an entire field.",
+            "jp": "哲学と美術の素材は、龍樹『中論』（および中観思想）、『バガヴァッド・ギーター』、ソクラテスの問い、マルセル・デュシャン《泉》（1917）です。飾りではなく、関係の中で価値が立ち上がること、成果への執着が更新を妨げること、問いが理解を産むこと、問いの付け替えが領域全体を動かすことを支えます。"
+      },
+      {
+            "en": "For the maker’s philosophy, the central source is Iwata-san: Satoru Iwata’s words gathered in the Hobonichi Books volume, together with related interviews from Hobonichi and the Iwata Asks series. This supports the practical heart of the OS: look at the root rather than the symptom, search for one move that solves several problems at once, and connect knowledge to tomorrow’s action.",
+            "jp": "作り手の仕事観を支える中心素材は、『岩田さん　岩田聡はこんなことを話していた。』（ほぼ日ブックス）、ほぼ日刊イトイ新聞『岩田さん』関連・『社長が訊く』ほかです。症状ではなく根っこを見ること、複数の問題を一度に解く一手を探すこと、知識を明日の行動につなぐことを支えます。"
+      },
+      {
+            "en": "Around Iwata, the source map also includes Shigeru Miyamoto, Hironobu Sakaguchi, and Yozo Sakagami. Miyamoto supports the observation channel: do not only ask; watch. Sakaguchi supports the conviction channel: where observation cannot yet reach, hypotheses may begin from story, beauty, and belief. Sakagami and The Idolmaster support the relationship-design lens: the recipient can be designed not as a passive consumer, but as a participant, a producer, and an agent.",
+            "jp": "岩田さんの周辺には、宮本茂さん、坂口博信さん、坂上陽三さんがいます。宮本さんは、訊くだけでなく見る、という観察起点を支えます。坂口さんは、まだ観察できないものへ確信・美意識・物語から跳ぶ仮説生成を支えます。坂上さんとアイドルマスターは、受け手を消費者ではなく、参加者・プロデューサー・主体として設計するレンズを支えます。"
+      },
+      {
+            "en": "For the operational templates, two additional sources are useful. Konifar’s essay on handling abstract work supports the habit of cutting the frame yourself when a task is vague. The Foundation for Critical Thinking supports the discipline of separating facts, interpretation, assumptions, risks, and actions before asking someone else to move.",
+            "jp": "運用の型には、Konifar's ZATSU『抽象度の高い仕事の進め方』と、Foundation for Critical Thinking の Defining Critical Thinking も効きます。抽象度の高い仕事ほど自分で枠を切ること、相手を動かす前に事実・解釈・前提・リスク・アクションを分けることを支えます。"
+      },
+      {
+            "en": "The rule for using these sources is simple. Do not collect authorities in order to sound clever. Use a source only when it changes the next move: the question you ask, the hypothesis you place, the fact you check, the way you report, or the relationship you design.",
+            "jp": "これらの出典を使うルールは単純です。賢そうに見せるために権威を集めないこと。問いが変わる、仮説が変わる、確認する事実が変わる、報告の順番が変わる、関係設計が変わる——そういうときだけ、出典はこのOSに入ります。",
+            "quote": true
+      },
+      {
+            "en": "So the bibliography is also a maintenance tool. When the OS grows, return to this map. Ask where the new element belongs, which source supports it, whether it changes action, and whether an older sentence should now be pruned. That is how the system remains alive, light, and usable.",
+            "jp": "だから参考文献は、メンテナンス道具でもあります。このOSを育てるときは、この地図に戻ります。新しい要素はどこに属するのか。どの素材が支えるのか。行動は変わるのか。古い文を剪定すべきではないか。そうやって、このOSは生きたまま、軽く、使える道具であり続けます。"
+      }
+]
+  }
+];
+
+const toc = document.getElementById('toc');
+const content = document.getElementById('content');
+const statusEl = document.getElementById('status');
+const continueBtn = document.getElementById('continueBtn');
+const continuousBtn = document.getElementById('continuousBtn');
+const speedBtn = document.getElementById('speedBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const jpCurrentBtn = document.getElementById('jpCurrentBtn');
+const stopBtn = document.getElementById('stopBtn');
+const hideJpBtn = document.getElementById('hideJpBtn');
+
+const navItems = [
+  {id:'intro', label:'Opening & map', state:'ready'},
+  {id:'foundation', label:'Core OS', state:'ready'},
+  {id:'backbone', label:'Backbone', state:'ready'},
+  {id:'issue', label:'Issue discipline', state:'ready'},
+  {id:'phase-a', label:'Phase A', state:'ready'},
+  {id:'phase-b', label:'Phase B', state:'ready'},
+  {id:'phase-c', label:'Phase C', state:'ready'},
+  {id:'phase-d', label:'Phase D', state:'ready'},
+  {id:'phase-e', label:'Phase E', state:'ready'},
+  {id:'phase-f', label:'Phase F', state:'ready'},
+  {id:'lenses-overview', label:'Five lenses', state:'ready'},
+  {id:'lens-law', label:'Lens 1: law', state:'ready'},
+  {id:'lens-iwata', label:'Lens 2: Iwata', state:'ready'},
+  {id:'lens-toc', label:'Lens 3: constraint', state:'ready'},
+  {id:'lens-hypothesis', label:'Lens 4: hypotheses', state:'ready'},
+  {id:'lens-agency', label:'Lens 5: agency', state:'ready'},
+  {id:'depth', label:'Operating depth', state:'ready'},
+  {id:'phrases', label:'Phrase templates', state:'ready'},
+  {id:'gate', label:'30-second gate', state:'ready'},
+  {id:'motto', label:'Motto', state:'ready'},
+  {id:'cultivate', label:'How to grow it', state:'ready'},
+  {id:'references', label:'References', state:'ready'}
+];
+
+let continuous = true;
+let flat = [];
+let currentIndex = -1;
+let savedIndex = 0;
+const speechRates = [0.8, 0.9, 1.0];
+let speechRate = 0.9;
+let stopped = true;
+let voices = [];
+let paused = false;
+let wakeLock = null;
+const jpModes = ['note', 'always', 'off'];
+let jpMode = 'note';
+
+function esc(s){return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function jpHtml(s){return esc(s).replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');}
+
+const highlightPhrases = [
+  'operating system', 'make something happen', 'the right order', 'returned to whenever you feel lost',
+  'consulting discipline', 'maker’s view of work', 'support and freedom', 'move people, and expand the freedom',
+  'The value of making things happen', 'judgement, action, or confidence', 'the beneficiary of the work', 'future self',
+  'which decision', 'how far forward', 'value is created', 'do not miss the question', 'do not wait for the correct answer',
+  'facts, evaluation, risk, and action', 'translate it into a form that helps them move', 'look at the root, not merely at the symptom',
+  'several problems at once', 'capability approach', 'conversion factors', 'institutional conversion barrier', 'agency',
+  'their own value system', 'capacity cannot be injected', 'ownership principle', 'process consultation', 'humble inquiry',
+  'Are you happy now', 'conversion efficiency', 'Issue value', 'solution quality', 'dog path', 'first move right', 'then move up',
+  'change the question', 'job theory', 'functional job', 'emotional job', 'social job', 'specify the decision',
+  'question whose answer changes the next action', 'define the exit', 'scope, completion criteria, and milestones',
+  'working hypothesis', 'conditions for testing', 'falsifiability', 'empty boxes', 'conclusion, evidence, unknowns, risks, and next actions',
+  'structure the answer', 'decision-making decomposition', 'move up', 'move down', 'support it with facts', 'break it with disconfirming evidence',
+  'critical thinking', 'raise the quality of judgement', 'fact, evaluation, risk, and action', 'Pyramid structure', 'claim, reasons, evidence, and implication',
+  'So what?', 'Why so?', 'understanding, emotion, and practical stakes', 'translate the same content', 'proposal', 'options, criteria, recommendation, and next action',
+  'actually move', 'update the pattern', 'turn knowledge into the shape of the next action', 'Trust is built', 'reducing the other person’s uncertainty',
+  'five lenses', 'same structure', 'reverse-engineer from the issue', 'think from the opposing side', 'root, not the symptom',
+  'weakest link', 'Theory of Constraints', 'local optimisation', 'MOTHER 2', 'Pokémon Gold and Silver',
+  'hypotheses come from', 'observation', 'conviction', 'verification must be strict', 'generation is free', 'two guardrails',
+  'make the other person the subject', 'Producer', 'agency and ownership', 'repeated game', 'agency, not risk',
+  'depth should match the stakes', 'phronesis', 'spoken templates', 'thirty-second gate', 'motto', 'grow this operating system',
+  'connectability', 'action conversion', 'non-duplication', 'pruning', 'Does this sentence change my action?', 'source map'
+];
+
+function enHtml(text){
+  const matches = [];
+  for(const phrase of highlightPhrases){
+    const lower = text.toLowerCase();
+    const needle = phrase.toLowerCase();
+    let pos = lower.indexOf(needle);
+    while(pos !== -1){
+      matches.push({start:pos,end:pos+phrase.length});
+      pos = lower.indexOf(needle, pos + Math.max(1, phrase.length));
+    }
+  }
+  matches.sort((a,b)=>(a.start-b.start)||((b.end-b.start)-(a.end-a.start)));
+  const chosen = [];
+  for(const m of matches){
+    if(chosen.length >= 3) break;
+    if(chosen.every(c => m.end <= c.start || m.start >= c.end)) chosen.push(m);
+  }
+  if(!chosen.length){
+    const firstStop = text.search(/[.!?](\s|$)/);
+    const end = firstStop > 0 ? Math.min(firstStop + 1, 150) : Math.min(text.length, 120);
+    chosen.push({start:0,end});
+  }
+  chosen.sort((a,b)=>a.start-b.start);
+  let html = '';
+  let cur = 0;
+  for(const m of chosen){
+    html += esc(text.slice(cur, m.start));
+    html += '<strong>' + esc(text.slice(m.start, m.end)) + '</strong>';
+    cur = m.end;
+  }
+  html += esc(text.slice(cur));
+  return html;
+}
+
+navItems.forEach((item, ni)=>{
+  const a = document.createElement('a');
+  a.href = '#' + item.id;
+  a.className = item.state === 'ready' ? 'ready' : 'outline';
+  a.innerHTML = `<span>${esc(item.label)}</span><small>${String(ni+1).padStart(2,'0')} · ${item.state}</small>`;
+  toc.appendChild(a);
+});
+
+sections.forEach((sec, si)=>{
+  const section = document.createElement('section');
+  section.id = sec.id;
+  section.innerHTML = `<div class="section-head"><div class="section-tag">${esc(sec.tag)}</div><h2>${esc(sec.title)}</h2><p class="section-desc">${esc(sec.desc)}</p></div>`;
+  sec.items.forEach((item, pi)=>{
+    const idx = flat.length;
+    flat.push({...item, sec:sec.title, secId:sec.id, idx});
+    const card = document.createElement('article');
+    card.className = 'para-card' + (item.quote ? ' quote-card' : '');
+    card.dataset.index = idx;
+    card.innerHTML = `<div class="en">${enHtml(item.en)}</div><div class="jp">${jpHtml(item.jp)}</div><div class="mini"><span>${si+1}.${pi+1}</span></div>`;
+    section.appendChild(card);
+  });
+  if(!sec.items.length){
+    const outline = document.createElement('div');
+    outline.className = 'outline-card';
+    outline.innerHTML = `<strong>Outline slot.</strong> This chapter is already placed in the app structure. English lecture paragraphs and Japanese originals will be inserted here in the next content pass.`;
+    section.appendChild(outline);
+  }
+  content.appendChild(section);
+});
+
+
+const storageKey = 'consultIwataAudioState:v2';
+
+function sectionPosition(index){
+  const item = flat[index];
+  if(!item) return {chapter:'', pos:0, total:0};
+  const inChapter = flat.filter(x => x.sec === item.sec);
+  const pos = inChapter.findIndex(x => x.idx === index) + 1;
+  return {chapter:item.sec, pos, total:inChapter.length};
+}
+
+function savePlaybackState(extra={}){
+  const state = {
+    index: Math.max(0, currentIndex >= 0 ? currentIndex : savedIndex || 0),
+    continuous,
+    speechRate,
+    jpMode,
+    updatedAt: new Date().toISOString(),
+    ...extra
+  };
+  try{ localStorage.setItem(storageKey, JSON.stringify(state)); }catch(e){}
+  savedIndex = state.index;
+  updateContinueButton();
+}
+
+function loadPlaybackState(){
+  try{
+    const raw = localStorage.getItem(storageKey);
+    if(!raw) return;
+    const state = JSON.parse(raw);
+    if(Number.isFinite(state.index)) savedIndex = Math.max(0, Math.min(flat.length - 1, state.index));
+    if(typeof state.continuous === 'boolean') continuous = state.continuous;
+    if(Number.isFinite(state.speechRate) && speechRates.includes(state.speechRate)) speechRate = state.speechRate;
+    if(typeof state.jpMode === 'string' && jpModes.includes(state.jpMode)) jpMode = state.jpMode;
+  }catch(e){}
+}
+
+function updateContinueButton(){
+  const idx = currentIndex >= 0 ? currentIndex : savedIndex;
+  const item = flat[idx];
+  if(!item){ continueBtn.textContent = 'Continue'; return; }
+  const p = sectionPosition(idx);
+  continueBtn.textContent = `Continue ${idx+1}/${flat.length}`;
+  continueBtn.title = `${p.chapter} — ${p.pos}/${p.total}`;
+}
+
+function updateSpeedButton(){
+  speedBtn.textContent = `Speed: ${speechRate.toFixed(1)}×`;
+  speedBtn.setAttribute('aria-label', `Speech speed ${speechRate.toFixed(1)} times`);
+}
+
+function applyJpMode(){
+  document.body.classList.remove('jp-mode-note','jp-mode-always','jp-mode-off');
+  document.body.classList.add(`jp-mode-${jpMode}`);
+  const labels = {note:'Note', always:'Always', off:'Off'};
+  hideJpBtn.textContent = `JP: ${labels[jpMode]}`;
+  hideJpBtn.setAttribute('aria-label', `Japanese display mode: ${labels[jpMode]}`);
+  if(jpMode !== 'note'){
+    document.querySelectorAll('.para-card.show-jp').forEach(c=>c.classList.remove('show-jp','jp-flash'));
+  }
+}
+
+function cycleJpMode(){
+  const i = jpModes.indexOf(jpMode);
+  jpMode = jpModes[(i + 1) % jpModes.length];
+  applyJpMode();
+  const messages = {
+    note:'Japanese mode: show only the note you ask for.',
+    always:'Japanese mode: always show a small original note under each card.',
+    off:'Japanese mode: hidden for English-only listening.'
+  };
+  setStatus(messages[jpMode]);
+  savePlaybackState();
+}
+
+function setStatus(message, index=currentIndex){
+  const p = index >= 0 ? sectionPosition(index) : null;
+  if(p && p.chapter){
+    statusEl.innerHTML = `${esc(message)} <span aria-hidden="true">·</span> <strong>${esc(p.chapter)}</strong> ${p.pos}/${p.total} <span aria-hidden="true">·</span> ${index+1}/${flat.length}`;
+  }else{
+    statusEl.textContent = message;
+  }
+}
+
+loadPlaybackState();
+continuousBtn.classList.toggle('on', continuous);
+continuousBtn.textContent = `Continuous: ${continuous ? 'ON' : 'OFF'}`;
+continuousBtn.setAttribute('aria-pressed', String(continuous));
+updateSpeedButton();
+applyJpMode();
+updateContinueButton();
+setStatus(savedIndex > 0 ? 'Ready. Saved place is available.' : 'Ready.');
+
+function loadVoices(){ voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; }
+if ('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+
+function getBritishVoice(){
+  if(!voices.length) loadVoices();
+  return voices.find(v => /en-GB/i.test(v.lang) && /female|serena|susan|kate|victoria|samantha|google/i.test(v.name))
+      || voices.find(v => /en-GB/i.test(v.lang))
+      || voices.find(v => /^en/i.test(v.lang))
+      || null;
+}
+
+function setPlaying(index){
+  document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('playing'));
+  const card = document.querySelector(`.para-card[data-index="${index}"]`);
+  if(card){card.classList.add('playing'); card.scrollIntoView({block:'center', behavior:'smooth'});}
+  updateContinueButton();
+}
+
+function playbackPauseMs(index){
+  const current = flat[index];
+  const next = flat[index + 1];
+  if(!current || !next) return 0;
+  return current.sec === next.sec ? 1000 : 2000;
+}
+
+function showJapaneseNote(card){
+  if(jpMode !== 'note') return false;
+  document.querySelectorAll('.para-card.show-jp').forEach(c=>{ if(c !== card) c.classList.remove('show-jp'); });
+  card.classList.add('show-jp','jp-flash');
+  setTimeout(()=>card.classList.remove('jp-flash'), 260);
+  return true;
+}
+
+function toggleJapaneseNoteForCard(card){
+  if(!card) return false;
+  if(jpMode !== 'note') return false;
+  if(card.classList.contains('show-jp')){
+    card.classList.remove('show-jp');
+    return false;
+  }
+  return showJapaneseNote(card);
+}
+
+async function requestWakeLock(){
+  if(!('wakeLock' in navigator) || wakeLock) return;
+  try{ wakeLock = await navigator.wakeLock.request('screen'); }
+  catch(e){ wakeLock = null; }
+}
+
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release().catch(()=>{}); wakeLock = null; }
+}
+
+function updateMediaSession(item){
+  if(!('mediaSession' in navigator) || !item) return;
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: item.sec,
+    artist: 'Consulting × Iwata Mindset',
+    album: 'Completed Edition — Audio English'
+  });
+  try{
+    navigator.mediaSession.setActionHandler('play', ()=>resumeSpeech());
+    navigator.mediaSession.setActionHandler('pause', ()=>pauseSpeech());
+    navigator.mediaSession.setActionHandler('previoustrack', ()=>jumpRelative(-1));
+    navigator.mediaSession.setActionHandler('nexttrack', ()=>jumpRelative(1));
+    navigator.mediaSession.playbackState = paused ? 'paused' : 'playing';
+  }catch(e){}
+}
+
+function pauseSpeech(){
+  if('speechSynthesis' in window && speechSynthesis.speaking && !speechSynthesis.paused){
+    speechSynthesis.pause();
+    paused = true;
+    pauseBtn.textContent = 'Resume';
+    setStatus('Paused.');
+    savePlaybackState();
+    if('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+  }
+}
+
+function resumeSpeech(){
+  if('speechSynthesis' in window && speechSynthesis.paused){
+    speechSynthesis.resume();
+    paused = false;
+    pauseBtn.textContent = 'Pause';
+    setStatus(currentIndex >= 0 ? 'Reading.' : 'Ready.');
+    savePlaybackState();
+    if('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+  }
+}
+
+function jumpRelative(delta){
+  const base = currentIndex >= 0 ? currentIndex : 0;
+  const next = Math.max(0, Math.min(flat.length - 1, base + delta));
+  speak(next);
+}
+
+function speak(index){
+  if(!('speechSynthesis' in window)){
+    setStatus('Speech synthesis is not available in this browser.');
+    return;
+  }
+  stopped = false;
+  currentIndex = index;
+  const item = flat[index];
+  if(!item) return;
+  paused = false;
+  pauseBtn.textContent = 'Pause';
+  requestWakeLock();
+  updateMediaSession(item);
+  speechSynthesis.cancel();
+  setPlaying(index);
+  setStatus('Reading.', index);
+  savePlaybackState({index});
+  const utter = new SpeechSynthesisUtterance(item.en);
+  utter.lang = 'en-GB';
+  utter.rate = speechRate;
+  utter.pitch = 0.98;
+  utter.volume = 1;
+  const v = getBritishVoice();
+  if(v) utter.voice = v;
+  utter.onend = () => {
+    if(stopped) return;
+    if(continuous && index < flat.length - 1){
+      const pause = playbackPauseMs(index);
+      const sameChapter = pause === 1000;
+      setStatus(sameChapter ? 'Pausing briefly…' : 'Chapter break. Pausing for two seconds…', index);
+      setTimeout(()=>{ if(!stopped) speak(index + 1); }, pause);
+    }else{
+      setStatus('Finished.', index);
+      savePlaybackState({index});
+      if('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+      releaseWakeLock();
+      document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('playing'));
+    }
+  };
+  utter.onerror = () => { setStatus('The speech engine stopped. Try tapping again.'); savePlaybackState(); };
+  speechSynthesis.speak(utter);
+}
+
+
+continueBtn.addEventListener('click',()=>{
+  const idx = Math.max(0, Math.min(flat.length - 1, savedIndex || currentIndex || 0));
+  speak(idx);
+});
+
+speedBtn.addEventListener('click',()=>{
+  const i = speechRates.indexOf(speechRate);
+  speechRate = speechRates[(i + 1) % speechRates.length];
+  updateSpeedButton();
+  savePlaybackState();
+  if('speechSynthesis' in window && speechSynthesis.speaking && !speechSynthesis.paused && currentIndex >= 0){
+    stopped = true;
+    speechSynthesis.cancel();
+    setTimeout(()=>{ stopped = false; speak(currentIndex); }, 80);
+    setStatus(`Speed changed to ${speechRate.toFixed(1)} times. Restarting this paragraph.`);
+  }else{
+    setStatus(`Speed changed to ${speechRate.toFixed(1)} times.`);
+  }
+});
+
+continuousBtn.addEventListener('click',()=>{
+  continuous = !continuous;
+  continuousBtn.classList.toggle('on', continuous);
+  continuousBtn.textContent = `Continuous: ${continuous ? 'ON' : 'OFF'}`;
+  continuousBtn.setAttribute('aria-pressed', String(continuous));
+  setStatus(continuous ? 'Continuous playback is on. Same chapter: one second; chapter break: two seconds.' : 'Single paragraph playback is on.');
+  savePlaybackState();
+});
+pauseBtn.addEventListener('click',()=>{
+  if('speechSynthesis' in window && speechSynthesis.paused) resumeSpeech();
+  else pauseSpeech();
+});
+prevBtn.addEventListener('click',()=>jumpRelative(-1));
+nextBtn.addEventListener('click',()=>jumpRelative(1));
+jpCurrentBtn.addEventListener('click',()=>{
+  const card = document.querySelector(`.para-card[data-index="${currentIndex}"]`);
+  if(!card){ setStatus('Start playback or tap a paragraph first.'); return; }
+  if(jpMode === 'always'){
+    setStatus('Japanese is already shown for every paragraph.');
+    return;
+  }
+  if(jpMode === 'off'){
+    setStatus('Japanese mode is off. Tap JP: Off to switch modes.');
+    return;
+  }
+  const shown = toggleJapaneseNoteForCard(card);
+  setStatus(shown ? 'Japanese note shown for the current paragraph.' : 'Japanese note hidden for the current paragraph.');
+});
+stopBtn.addEventListener('click',()=>{
+  stopped = true;
+  paused = false;
+  pauseBtn.textContent = 'Pause';
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  if('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+  releaseWakeLock();
+  document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('playing'));
+  setStatus('Stopped.');
+  savePlaybackState();
+});
+hideJpBtn.addEventListener('click',cycleJpMode);
+
+let startX = 0, startY = 0;
+document.addEventListener('pointerdown', e=>{
+  const card = e.target.closest('.para-card');
+  if(!card) return;
+  startX = e.clientX; startY = e.clientY;
+});
+document.addEventListener('pointerup', e=>{
+  const card = e.target.closest('.para-card');
+  if(!card) return;
+  if(e.target.closest('.jp')){
+    if(jpMode === 'note'){
+      card.classList.remove('show-jp');
+      setStatus('Japanese note hidden for this paragraph.');
+    }
+    return;
+  }
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  if(Math.abs(dx) > 46 && Math.abs(dx) > Math.abs(dy)*1.2){
+    if(jpMode !== 'note'){
+      setStatus(jpMode === 'always' ? 'Japanese is already shown for every paragraph.' : 'Japanese mode is off. Tap JP: Off to switch modes.');
+      return;
+    }
+    if(dx < 0){
+      showJapaneseNote(card);
+      setStatus('Japanese original shown as a bottom-right note.');
+    }else{
+      card.classList.remove('show-jp');
+      setStatus('Japanese note hidden for this paragraph.');
+    }
+    return;
+  }
+  if(Math.abs(dx) < 12 && Math.abs(dy) < 12){
+    speak(Number(card.dataset.index));
+  }
+});
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden && !stopped) requestWakeLock();
+});
+</script>
+</body>
+</html>
